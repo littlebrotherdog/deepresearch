@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deep Research Agent</title>
+<style>
+:root{
+    --bg-0:#0b0d14;
+    --bg-1:#11131d;
+    --bg-2:#161a28;
+    --bg-3:#1d2235;
+    --panel:rgba(255,255,255,.04);
+    --panel-strong:rgba(255,255,255,.06);
+    --border:rgba(255,255,255,.08);
+    --border-strong:rgba(255,255,255,.14);
+    --text:#e8eaf2;
+    --text-2:#a7adc0;
+    --text-3:#6b7184;
+    --accent:#7c8cff;
+    --accent-2:#b06bff;
+    --accent-3:#36d6e7;
+    --grad:linear-gradient(135deg,#7c8cff 0%,#b06bff 50%,#36d6e7 100%);
+    --grad-soft:linear-gradient(135deg,rgba(124,140,255,.18),rgba(176,107,255,.18),rgba(54,214,231,.18));
+    --ok:#34d399;
+    --warn:#fbbf24;
+    --err:#fb7185;
+    --shadow:0 10px 40px -12px rgba(0,0,0,.6);
+    --radius:16px;
+    --ease:cubic-bezier(.16,1,.3,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{
+    font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Roboto,sans-serif;
+    color:var(--text);
+    background:
+        radial-gradient(1100px 700px at 18% -8%,rgba(124,140,255,.16),transparent 60%),
+        radial-gradient(900px 600px at 110% 10%,rgba(54,214,231,.12),transparent 55%),
+        radial-gradient(800px 800px at 50% 120%,rgba(176,107,255,.12),transparent 60%),
+        linear-gradient(180deg,#0b0d14,#0a0c12);
+    height:100vh;overflow:hidden;
+    -webkit-font-smoothing:antialiased;
+}
+#app{display:flex;height:100vh}
+
+/* ---------- Sidebar ---------- */
+#sidebar{
+    width:272px;min-width:272px;
+    background:linear-gradient(180deg,rgba(22,26,40,.85),rgba(13,15,22,.92));
+    backdrop-filter:blur(20px);
+    border-right:1px solid var(--border);
+    display:flex;flex-direction:column;
+}
+.sidebar-header{
+    padding:18px 16px 14px;border-bottom:1px solid var(--border);
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+}
+.brand{display:flex;align-items:center;gap:10px}
+.brand-logo{
+    width:30px;height:30px;border-radius:9px;background:var(--grad);
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 6px 18px -6px rgba(124,140,255,.6);
+}
+.brand-logo svg{width:18px;height:18px;fill:#fff}
+.brand-name{font-size:16px;font-weight:700;letter-spacing:.2px;background:var(--grad);
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.session-list{flex:1;overflow-y:auto;padding:10px}
+.session-item{
+    padding:11px 12px;border-radius:12px;cursor:pointer;margin-bottom:4px;
+    transition:background .25s var(--ease),transform .25s var(--ease);
+    display:flex;align-items:center;gap:10px;position:relative;
+    border:1px solid transparent;
+}
+.session-item:hover{background:var(--panel-strong);transform:translateX(2px)}
+.session-item.active{
+    background:var(--grad-soft);border-color:var(--border-strong);
+}
+.session-item.active::before{
+    content:"";position:absolute;left:-10px;top:50%;transform:translateY(-50%);
+    width:4px;height:22px;border-radius:4px;background:var(--grad);
+}
+.session-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;
+    background:var(--text-3);transition:background .25s}
+.session-item.active .session-dot{background:var(--accent-3);box-shadow:0 0 10px var(--accent-3)}
+.session-info{flex:1;min-width:0}
+.session-title{font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500}
+.session-meta{font-size:11px;color:var(--text-3);margin-top:3px}
+.sidebar-footer{padding:12px;border-top:1px solid var(--border)}
+.model-pill{
+    display:flex;align-items:center;gap:8px;padding:9px 12px;
+    background:var(--panel);border:1px solid var(--border);border-radius:12px;
+    font-size:12px;color:var(--text-2);cursor:pointer;transition:all .25s var(--ease);
+}
+.model-pill:hover{background:var(--panel-strong);border-color:var(--border-strong);transform:translateY(-1px)}
+.model-pill .pill-dot{width:6px;height:6px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok)}
+.model-pill .pill-name{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600;color:var(--text)}
+
+/* ---------- Main ---------- */
+#main{flex:1;display:flex;flex-direction:column;min-width:0;position:relative}
+.chat-header{
+    padding:16px 24px;border-bottom:1px solid var(--border);
+    display:flex;justify-content:space-between;align-items:center;
+    background:rgba(13,15,22,.55);backdrop-filter:blur(14px);
+    position:relative;z-index:5;
+}
+.chat-title-wrap{display:flex;align-items:center;gap:10px;min-width:0}
+.chat-title-wrap .title-ico{width:22px;height:22px;color:var(--accent)}
+#current-session-title{font-size:14.5px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-subtitle{font-size:11.5px;color:var(--text-3);margin-top:2px}
+
+.chat-messages{flex:1;overflow-y:auto;padding:28px 0;scroll-behavior:smooth}
+.chat-inner{max-width:820px;margin:0 auto;padding:0 24px;display:flex;flex-direction:column;gap:22px}
+
+/* Welcome */
+.welcome{display:flex;flex-direction:column;align-items:center;text-align:center;padding:48px 24px;
+    animation:fadeIn .6s var(--ease) both}
+.welcome-badge{
+    display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:999px;
+    background:var(--grad-soft);border:1px solid var(--border-strong);
+    font-size:12px;color:var(--text-2);margin-bottom:22px;
+}
+.welcome-badge .live-dot{width:7px;height:7px;border-radius:50%;background:var(--accent-3);
+    box-shadow:0 0 10px var(--accent-3);animation:pulse 1.8s infinite}
+.welcome h1{font-size:34px;font-weight:800;letter-spacing:-.5px;line-height:1.2;margin-bottom:14px}
+.welcome h1 .grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.welcome p{color:var(--text-2);font-size:15px;line-height:1.7;max-width:480px;margin-bottom:34px}
+.welcome .features{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;width:100%;max-width:560px}
+.feature-card{
+    padding:18px 14px;border-radius:14px;background:var(--panel);border:1px solid var(--border);
+    transition:all .35s var(--ease);cursor:default;
+}
+.feature-card:hover{transform:translateY(-4px);border-color:var(--border-strong);
+    background:var(--panel-strong);box-shadow:var(--shadow)}
+.feature-ico{width:34px;height:34px;border-radius:10px;background:var(--grad-soft);
+    display:flex;align-items:center;justify-content:center;margin:0 auto 12px;color:var(--accent)}
+.feature-ico svg{width:18px;height:18px}
+.feature-card h3{font-size:13.5px;font-weight:600;margin-bottom:5px}
+.feature-card p{font-size:12px;color:var(--text-3);line-height:1.5;margin:0}
+
+/* Messages */
+.msg-row{display:flex;animation:slideUp .4s var(--ease) both}
+.msg-row.user{justify-content:flex-end}
+.msg-row.assistant{justify-content:flex-start}
+.msg{
+    max-width:78%;padding:13px 17px;border-radius:16px;line-height:1.7;font-size:14px;
+    word-wrap:break-word;position:relative;
+}
+.msg.user{
+    background:var(--grad);color:#fff;border-bottom-right-radius:5px;
+    box-shadow:0 8px 24px -8px rgba(124,140,255,.5);
+}
+.msg.assistant{
+    background:var(--panel-strong);border:1px solid var(--border);
+    backdrop-filter:blur(10px);border-bottom-left-radius:5px;
+}
+.msg.assistant h1,.msg.assistant h2,.msg.assistant h3{margin:14px 0 8px;color:#fff;font-weight:700;line-height:1.3}
+.msg.assistant h1{font-size:19px}.msg.assistant h2{font-size:16.5px}.msg.assistant h3{font-size:15px}
+.msg.assistant p{margin:9px 0}
+.msg.assistant ul,.msg.assistant ol{margin:9px 0;padding-left:22px}
+.msg.assistant li{margin:5px 0}
+.msg.assistant code{background:rgba(0,0,0,.35);padding:2px 6px;border-radius:5px;font-size:12.8px;font-family:"SF Mono",ui-monospace,Menlo,monospace}
+.msg.assistant pre{background:rgba(0,0,0,.4);padding:14px;border-radius:10px;overflow-x:auto;margin:10px 0;border:1px solid var(--border)}
+.msg.assistant pre code{background:none;padding:0;font-size:13px}
+.msg.assistant a{color:var(--accent-3);text-decoration:none;border-bottom:1px solid transparent;transition:border-color .2s}
+.msg.assistant a:hover{border-bottom-color:var(--accent-3)}
+.msg.assistant blockquote{border-left:3px solid var(--accent);padding:4px 14px;margin:10px 0;color:var(--text-2);background:rgba(124,140,255,.06);border-radius:0 8px 8px 0}
+.msg.assistant table{border-collapse:collapse;margin:10px 0;width:100%;font-size:13px}
+.msg.assistant th,.msg.assistant td{border:1px solid var(--border);padding:7px 11px}
+.msg.assistant th{background:var(--panel-strong);color:#fff;font-weight:600}
+.msg.assistant strong{color:#fff;font-weight:700}
+.msg-cursor::after{content:"";display:inline-block;width:8px;height:15px;margin-left:2px;
+    background:var(--accent);border-radius:2px;animation:blink 1s steps(2) infinite;vertical-align:-2px}
+
+/* Message actions (export) */
+.msg.assistant{position:relative}
+.msg-actions{
+    display:none;position:absolute;bottom:-10px;right:4px;gap:4px;
+    opacity:0;transition:opacity .2s var(--ease);z-index:2;
+}
+.msg.assistant:hover .msg-actions{display:flex;opacity:1}
+.msg-action-btn{
+    background:var(--panel-strong);border:1px solid var(--border-strong);
+    color:var(--text-2);padding:4px 8px;border-radius:7px;cursor:pointer;
+    font-size:11px;display:flex;align-items:center;gap:4px;
+    transition:all .2s var(--ease);backdrop-filter:blur(8px);
+}
+.msg-action-btn:hover{background:var(--panel);color:var(--text);border-color:var(--accent);transform:translateY(-1px)}
+.msg-action-btn svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2}
+
+/* Memory chip */
+.mem-chip{
+    align-self:center;font-size:11.5px;color:var(--text-3);
+    padding:6px 14px;border-radius:999px;background:var(--panel);border:1px solid var(--border);
+    margin:0 auto;animation:fadeIn .4s var(--ease) both;
+}
+
+/* Research card (inline) */
+.research-card{
+    align-self:flex-start;width:100%;max-width:78%;
+    background:var(--panel-strong);border:1px solid var(--border-strong);
+    border-radius:16px;overflow:hidden;backdrop-filter:blur(14px);
+    animation:slideUp .4s var(--ease) both;
+}
+.rc-head{display:flex;align-items:center;gap:11px;padding:13px 16px;border-bottom:1px solid var(--border);
+    background:linear-gradient(90deg,rgba(124,140,255,.08),transparent)}
+.rc-spinner{
+    width:18px;height:18px;border-radius:50%;flex-shrink:0;
+    background:conic-gradient(from 0deg,var(--accent),var(--accent-2),var(--accent-3),var(--accent));
+    -webkit-mask:radial-gradient(circle 5px at center,#0000 90%,#000 91%);
+    mask:radial-gradient(circle 5px at center,#0000 90%,#000 91%);
+    animation:spin .9s linear infinite;
+}
+.rc-check{width:18px;height:18px;border-radius:50%;flex-shrink:0;background:var(--ok);
+    display:flex;align-items:center;justify-content:center}
+.rc-check svg{width:11px;height:11px;stroke:#06281f;stroke-width:3.5;fill:none}
+.rc-title{font-size:13.5px;font-weight:700}
+.rc-phase{margin-left:auto;font-size:11.5px;color:var(--text-2);
+    padding:3px 10px;border-radius:999px;background:var(--panel);border:1px solid var(--border);
+    transition:all .3s var(--ease)}
+.rc-timeline{max-height:280px;overflow-y:auto;padding:10px 16px;display:flex;flex-direction:column;gap:3px}
+.rc-card.done .rc-timeline{max-height:200px;opacity:.85;mask-image:linear-gradient(180deg,#000 75%,transparent)}
+.tl-item{display:flex;align-items:flex-start;gap:11px;padding:6px 0;
+    animation:slideRt .35s var(--ease) both;font-size:12.8px;color:var(--text-2);line-height:1.5}
+.tl-ico{width:20px;height:20px;border-radius:7px;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+    background:var(--panel);border:1px solid var(--border);font-size:11px;font-weight:700}
+.tl-item.plan .tl-ico{color:var(--accent);background:rgba(124,140,255,.14)}
+.tl-item.search .tl-ico{color:var(--warn);background:rgba(251,191,36,.14)}
+.tl-item.read .tl-ico{color:var(--ok);background:rgba(52,211,153,.14)}
+.tl-item.synth .tl-ico{color:var(--accent-2);background:rgba(176,107,255,.14)}
+.tl-text{padding-top:1px}
+.tl-text b{color:var(--text);font-weight:600}
+
+/* ---------- Input ---------- */
+.input-bar{padding:18px 24px 22px;background:linear-gradient(180deg,transparent,rgba(10,12,18,.6) 30%);position:relative;z-index:5}
+.input-wrap{max-width:820px;margin:0 auto;display:flex;gap:12px;align-items:flex-end;
+    background:var(--panel-strong);border:1px solid var(--border-strong);border-radius:18px;
+    padding:8px 8px 8px 18px;backdrop-filter:blur(16px);transition:all .3s var(--ease);
+    box-shadow:0 12px 40px -16px rgba(0,0,0,.7)}
+.input-wrap:focus-within{border-color:rgba(124,140,255,.5);box-shadow:0 0 0 4px rgba(124,140,255,.1),0 12px 40px -16px rgba(124,140,255,.3)}
+#message-input{flex:1;background:none;border:none;color:var(--text);font-size:14.5px;font-family:inherit;
+    resize:none;max-height:140px;line-height:1.6;padding:8px 0;outline:none}
+#message-input::placeholder{color:var(--text-3)}
+.btn-send{
+    background:var(--grad);color:#fff;border:none;padding:11px 22px;border-radius:13px;cursor:pointer;
+    font-size:14px;font-weight:600;transition:all .3s var(--ease);white-space:nowrap;flex-shrink:0;
+    box-shadow:0 8px 22px -8px rgba(124,140,255,.6);display:flex;align-items:center;gap:7px;
+}
+.btn-send:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 12px 28px -8px rgba(124,140,255,.75)}
+.btn-send:active:not(:disabled){transform:translateY(0)}
+.btn-send:disabled{opacity:.35;cursor:not-allowed;box-shadow:none}
+.btn-send svg{width:15px;height:15px;fill:currentColor}
+.input-hint{text-align:center;font-size:11px;color:var(--text-3);margin-top:9px}
+
+/* ---------- Buttons ---------- */
+.btn-icon{background:var(--panel);border:1px solid var(--border);color:var(--text-2);
+    width:34px;height:34px;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+    transition:all .25s var(--ease)}
+.btn-icon:hover{background:var(--panel-strong);border-color:var(--border-strong);color:var(--text);transform:translateY(-1px)}
+.btn-icon svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2}
+.btn-icon.danger:hover{color:var(--err);border-color:rgba(251,113,133,.4)}
+.btn-new{
+    background:var(--grad);color:#fff;border:none;padding:8px 14px;border-radius:11px;cursor:pointer;
+    font-size:12.5px;font-weight:600;transition:all .3s var(--ease);box-shadow:0 6px 18px -6px rgba(124,140,255,.55);
+    display:inline-flex;align-items:center;justify-content:center;gap:5px;
+    flex-wrap:nowrap;white-space:nowrap;flex-shrink:0;line-height:1;
+}
+.btn-new:hover{transform:translateY(-2px);box-shadow:0 10px 24px -6px rgba(124,140,255,.7)}
+.btn-new svg{width:13px;height:13px;flex-shrink:0;display:block}
+
+/* ---------- Modal ---------- */
+.modal{position:fixed;inset:0;background:rgba(5,6,12,.7);backdrop-filter:blur(8px);
+    display:none;align-items:center;justify-content:center;z-index:100;padding:20px}
+.modal.show{display:flex;animation:fadeIn .3s var(--ease)}
+.modal-content{
+    background:linear-gradient(180deg,rgba(28,32,48,.97),rgba(18,20,30,.97));
+    border:1px solid var(--border-strong);border-radius:22px;width:520px;max-width:100%;max-height:90vh;
+    overflow-y:auto;box-shadow:0 30px 80px -20px rgba(0,0,0,.8);
+    animation:modalIn .4s var(--ease) both;
+}
+.modal-header{padding:22px 24px 0;display:flex;justify-content:space-between;align-items:flex-start}
+.modal-header h2{font-size:18px;font-weight:700}
+.modal-header h2 .grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.modal-sub{font-size:12.5px;color:var(--text-3);margin-top:4px}
+.modal-body{padding:22px 24px}
+.modal-footer{padding:0 24px 24px;display:flex;justify-content:flex-end;gap:10px}
+.form-group{margin-bottom:16px}
+.form-row{display:flex;gap:14px}
+.form-row .form-group{flex:1}
+.form-group label{display:flex;align-items:center;justify-content:space-between;font-size:12.5px;
+    color:var(--text-2);margin-bottom:7px;font-weight:500}
+.form-group input,.form-group select{
+    width:100%;background:rgba(0,0,0,.25);border:1px solid var(--border);border-radius:11px;
+    padding:11px 13px;color:var(--text);font-size:13.5px;font-family:inherit;transition:all .25s var(--ease)}
+.form-group input:focus,.form-group select:focus{outline:none;border-color:rgba(124,140,255,.5);
+    box-shadow:0 0 0 3px rgba(124,140,255,.12)}
+.form-group input::placeholder{color:var(--text-3)}
+.form-group select{appearance:none;cursor:pointer;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23a7adc0' stroke-width='2.5'><polyline points='6 9 12 15 18 9'/></svg>");
+    background-repeat:no-repeat;background-position:right 13px center;padding-right:36px}
+.config-status{font-size:12.5px;margin-top:10px;padding:10px 13px;border-radius:10px;display:none;align-items:center;gap:8px}
+.config-status.show{display:flex;animation:slideUp .3s var(--ease) both}
+.config-status.success{background:rgba(52,211,153,.12);color:var(--ok);border:1px solid rgba(52,211,153,.25)}
+.config-status.error{background:rgba(251,113,133,.12);color:var(--err);border:1px solid rgba(251,113,133,.25)}
+.config-status.loading{display:flex;background:rgba(124,140,255,.1);color:var(--accent);border:1px solid rgba(124,140,255,.25)}
+.cfg-btn-secondary{background:var(--panel);border:1px solid var(--border);color:var(--text-2);
+    padding:10px 18px;border-radius:11px;cursor:pointer;font-size:13.5px;font-weight:500;transition:all .25s var(--ease)}
+.cfg-btn-secondary:hover{background:var(--panel-strong);color:var(--text)}
+.cfg-btn-primary{background:var(--grad);color:#fff;border:none;padding:10px 20px;border-radius:11px;cursor:pointer;
+    font-size:13.5px;font-weight:600;transition:all .3s var(--ease);box-shadow:0 8px 20px -8px rgba(124,140,255,.6)}
+.cfg-btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 26px -8px rgba(124,140,255,.75)}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:8px;border:2px solid transparent;background-clip:padding-box}
+::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.18);background-clip:padding-box}
+
+/* Animations */
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideRt{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:translateX(0)}}
+@keyframes modalIn{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.001s!important;transition-duration:.001s!important}}
+@media print{
+    #sidebar,.chat-header,.input-bar,.msg-actions,.research-card,.mem-chip,.msg-action-btn{display:none!important}
+    #main{width:100%!important}
+    .chat-messages{overflow:visible!important;padding:0!important}
+    .msg.assistant{background:#fff!important;color:#1a1a2e!important;border:1px solid #ddd!important;break-inside:avoid}
+    .msg.assistant h1,.msg.assistant h2,.msg.assistant h3,.msg.assistant h4,.msg.assistant strong{color:#1a1a2e!important}
+    .msg.assistant a{color:#4a9eff!important}
+    .msg.assistant code{background:#f0f0f0!important;color:#333!important}
+    .msg.assistant pre{background:#f5f5f5!important;border:1px solid #ddd!important}
+    .msg.assistant blockquote{border-left-color:#4a9eff!important;color:#555!important;background:#f0f7ff!important}
+    .msg.assistant th{background:#f0f0f0!important;color:#1a1a2e!important}
+    .msg.user{background:#e8f0fe!important;color:#1a1a2e!important;box-shadow:none!important}
+    body{background:#fff!important}
+}
+</style>
+</head>
+<body>
+<div id="app">
+    <aside id="sidebar">
+        <div class="sidebar-header">
+            <div class="brand">
+                <div class="brand-logo"><svg viewBox="0 0 24 24"><path d="M12 2L3 7v6c0 5 3.8 9.4 9 11 5.2-1.6 9-6 9-11V7l-9-5zm-1.2 14L7 12.2l1.4-1.4 2.4 2.4 5.2-5.2L17.4 9.4 10.8 16z"/></svg></div>
+                <div class="brand-name">Deep Research</div>
+            </div>
+            <button id="new-session-btn" class="btn-new" title="新建会话">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <span>新建</span>
+            </button>
+        </div>
+        <div id="session-list" class="session-list"></div>
+        <div class="sidebar-footer">
+            <div id="model-pill" class="model-pill" title="点击配置模型">
+                <span class="pill-dot"></span>
+                <span class="pill-name" id="pill-model-name">未配置</span>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            </div>
+        </div>
+    </aside>
+
+    <main id="main">
+        <div class="chat-header">
+            <div class="chat-title-wrap">
+                <svg class="title-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                <div>
+                    <div id="current-session-title">选择或新建一个会话</div>
+                    <div class="chat-subtitle" id="chat-subtitle">基于多引擎搜索的智能研究助手</div>
+                </div>
+            </div>
+            <div style="display:flex;gap:6px;align-items:center;">
+                <button id="export-session-md" class="btn-icon" title="导出会话为 Markdown" style="display:none;font-size:11px;width:auto;padding:0 8px;gap:4px;font-weight:600;">
+                    <svg viewBox="0 0 24 24" style="width:14px;height:14px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>MD
+                </button>
+                <button id="export-session-pdf" class="btn-icon" title="导出会话为 PDF" style="display:none;font-size:11px;width:auto;padding:0 8px;gap:4px;font-weight:600;color:var(--accent-3);">
+                    <svg viewBox="0 0 24 24" style="width:14px;height:14px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M9 15h6"/><path d="M9 11h6"/></svg>PDF
+                </button>
+                <button id="delete-session-btn" class="btn-icon danger" title="删除当前会话" style="display:none;">
+                    <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg>
+                </button>
+            </div>
+        </div>
+
+        <div id="chat-messages" class="chat-messages">
+            <div class="chat-inner" id="chat-inner">
+                <!-- welcome injected by JS -->
+            </div>
+        </div>
+
+        <div class="input-bar">
+            <div class="input-wrap">
+                <textarea id="message-input" placeholder="输入你的问题，Agent 将自动搜索并深度研究..." rows="1"></textarea>
+                <button id="send-btn" class="btn-send" disabled>
+                    <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                    发送
+                </button>
+            </div>
+            <div class="input-hint">Enter 发送 · Shift+Enter 换行</div>
+        </div>
+    </main>
+</div>
+
+<!-- Config Modal -->
+<div id="config-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div>
+                <h2><span class="grad">模型配置</span></h2>
+                <div class="modal-sub">OpenAI 兼容接口 · 支持从候选列表选择模型</div>
+            </div>
+            <button id="close-config" class="btn-icon" title="关闭">
+                <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label>Base URL <span style="color:var(--text-3);font-weight:400">IP:Port/Path</span></label>
+                <input type="text" id="config-base-url" placeholder="http://10.x.x.x:8000/v1">
+            </div>
+            <div class="form-group">
+                <label>API Key</label>
+                <input type="password" id="config-api-key" placeholder="sk-...">
+            </div>
+            <div class="form-group">
+                <label>模型名称 <span id="model-loading-hint" style="color:var(--text-3);font-weight:400"></span></label>
+                <select id="config-model-name"><option value="">加载中...</option></select>
+                <input type="text" id="config-model-custom" placeholder="输入自定义模型名称" style="display:none;margin-top:8px;">
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Temperature</label>
+                    <input type="number" id="config-temperature" step="0.1" min="0" max="2" value="0.3">
+                </div>
+                <div class="form-group">
+                    <label>Max Tokens</label>
+                    <input type="number" id="config-max-tokens" step="256" min="256" value="4096">
+                </div>
+            </div>
+            <div class="config-status" id="config-status"></div>
+        </div>
+        <div class="modal-footer">
+            <button id="refresh-models" class="cfg-btn-secondary">刷新候选</button>
+            <button id="save-config" class="cfg-btn-primary">保存配置</button>
+        </div>
+    </div>
+</div>
+
+<script>
+const API = {
+    sessions: '/api/sessions',
+    modelConfig: '/api/model/config',
+    modelList: '/api/model/list',
+    wsUrl: `ws://${window.location.host}/ws/chat`,
+};
+let currentSessionId = null;
+let ws = null;
+let isResearching = false;
+let currentStreamingMsg = null;
+
+// Engine display names
+const ENGINE_NAMES = {baidu:'百度',google:'Google',scholar:'Scholar',arxiv:'arXiv'};
+
+// ----- research process (inline card) state -----
+let researchCard = null;
+let researchTimeline = null;
+
+const SVG = {
+    plan: '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+    search: '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>',
+    read: '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>',
+    synth: '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4"/></svg>',
+    check: '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>',
+};
+
+// ---------------------------------------------------------------------------
+// Markdown (minimal but improved)
+// ---------------------------------------------------------------------------
+function renderMarkdown(text){
+    if(!text) return '';
+    let html = text;
+    html = html.replace(/```(\w*)\n([\s\S]*?)```/g,(_,lang,code)=>`<pre><code class="${lang}">${escapeHtml(code.trim())}</code></pre>`);
+    html = html.replace(/`([^`]+)`/g,'<code>$1</code>');
+    html = html.replace(/^#### (.+)$/gm,'<h4>$1</h4>');
+    html = html.replace(/^### (.+)$/gm,'<h3>$1</h3>');
+    html = html.replace(/^## (.+)$/gm,'<h2>$1</h2>');
+    html = html.replace(/^# (.+)$/gm,'<h1>$1</h1>');
+    html = html.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
+    html = html.replace(/\*([^*\n]+?)\*/g,'<em>$1</em>');
+    html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');
+    html = html.replace(/^> (.+)$/gm,'<blockquote>$1</blockquote>');
+    html = html.replace(/^\|(.+)\|$/gm,(m)=>{
+        const cells=m.split('|').filter(c=>c.trim());
+        if(cells.some(c=>/^[-: ]+$/.test(c))) return '';
+        const tag = /^[-: ]+$/.test(cells[0]||'') ? 'th' : 'td';
+        return '<tr>'+cells.map(c=>`<${tag}>${c.trim()}</${tag}>`).join('')+'</tr>';
+    });
+    html = html.replace(/(<tr>[\s\S]*?<\/tr>(\s*<tr>[\s\S]*?<\/tr>)*)/g,m=>`<table>${m}</table>`);
+    html = html.replace(/^\s*[-*] (.+)$/gm,'<li>$1</li>');
+    html = html.replace(/(<li>[\s\S]*?<\/li>)(?=\s*[^<\n]|$)/g,m=>`<ul>${m}</ul>`);
+    html = html.replace(/^\s*\d+\. (.+)$/gm,'<li>$1</li>');
+    html = html.split(/\n{2,}/).map(p=>{
+        if(/^\s*<(h\d|ul|ol|pre|blockquote|table|p|li)/.test(p.trim()) || p.trim()==='') return p;
+        return `<p>${p.replace(/\n/g,'<br>')}</p>`;
+    }).join('\n');
+    return html;
+}
+function escapeHtml(t){const d=document.createElement('div');d.textContent=t==null?'':String(t);return d.innerHTML;}
+
+// ---------------------------------------------------------------------------
+// Sessions
+// ---------------------------------------------------------------------------
+async function loadSessions(){
+    try{
+        const resp=await fetch(API.sessions);
+        const sessions=await resp.json();
+        const list=document.getElementById('session-list');
+        list.innerHTML='';
+        if(!sessions.length){
+            list.innerHTML='<div style="text-align:center;color:var(--text-3);font-size:12px;padding:24px 8px;">暂无会话</div>';
+            return;
+        }
+        sessions.forEach(s=>{
+            const item=document.createElement('div');
+            item.className='session-item'+(s.id===currentSessionId?' active':'');
+            item.dataset.sessionId=s.id;
+            const time=new Date(s.updated_at*1000).toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
+            item.innerHTML=`<span class="session-dot"></span>
+                <div class="session-info">
+                    <div class="session-title">${escapeHtml(s.title||'未命名')}</div>
+                    <div class="session-meta">${time} · ${s.message_count}条 · ${s.research_count}研究</div>
+                </div>`;
+            item.onclick=()=>selectSession(s.id);
+            list.appendChild(item);
+        });
+    }catch(e){console.error('loadSessions error:',e);}
+}
+
+async function createSession(){
+    try{
+        const resp=await fetch(API.sessions,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({title:''})});
+        const session=await resp.json();
+        currentSessionId=session.id;
+        await loadSessions();
+        await loadSessionMessages(session.id);
+        document.getElementById('message-input').focus();
+    }catch(e){console.error('createSession error:',e);}
+}
+
+async function selectSession(id){
+    currentSessionId=id;
+    document.querySelectorAll('.session-item').forEach(el=>el.classList.toggle('active',el.dataset.sessionId===id));
+    await loadSessionMessages(id);
+}
+
+async function loadSessionMessages(id){
+    try{
+        const resp=await fetch(`${API.sessions}/${id}`);
+        const session=await resp.json();
+        const inner=document.getElementById('chat-inner');
+        inner.innerHTML='';
+        document.getElementById('current-session-title').textContent=session.title||'未命名会话';
+        document.getElementById('delete-session-btn').style.display='flex';
+        document.getElementById('export-session-md').style.display='flex';
+        document.getElementById('export-session-pdf').style.display='flex';
+
+        if(session.long_term&&session.long_term.length){
+            const chip=document.createElement('div');
+            chip.className='mem-chip';
+            chip.innerHTML=`记忆摘要 · ${session.long_term.length} 条长期记忆已加载`;
+            inner.appendChild(chip);
+        }
+        if(session.research&&session.research.length){
+            const chip=document.createElement('div');
+            chip.className='mem-chip';
+            chip.innerHTML=`已积累 ${session.research.length} 条研究资料`;
+            inner.appendChild(chip);
+        }
+        if(session.short_term&&session.short_term.length){
+            session.short_term.forEach(m=>{if(m.role==='user'||m.role==='assistant')addMessageToUI(m.role,m.content);});
+        }
+        if(!session.short_term||!session.short_term.length) showWelcome();
+        scrollToBottom();
+    }catch(e){console.error('loadSessionMessages error:',e);}
+}
+
+function showWelcome(){
+    document.getElementById('chat-inner').innerHTML=`
+        <div class="welcome">
+            <div class="welcome-badge"><span class="live-dot"></span> Deep Research Agent · 在线</div>
+            <h1>让 AI 替你<span class="grad"> 深度研究</span><br>任何问题</h1>
+            <p>基于多引擎搜索（百度、Google、Scholar、arXiv）与智能信息提取，自动完成搜集、分析、总结，并按会话管理长期记忆。</p>
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+                    <h3>多引擎搜索</h3>
+                    <p>百度、Google、Scholar、arXiv 全覆盖</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11H3v10h6zM21 3h-6v18h6zM15 7H9v14h6z"/></svg></div>
+                    <h3>智能分析</h3>
+                    <p>自动提取关键事实与交叉验证</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L3 7v6c0 5 3.8 9.4 9 11 5.2-1.6 9-6 9-11V7l-9-5z"/></svg></div>
+                    <h3>长期记忆</h3>
+                    <p>按会话保存，研究不丢失</p>
+                </div>
+            </div>
+        </div>`;
+}
+
+function addMessageToUI(role,content){
+    const inner=document.getElementById('chat-inner');
+    const row=document.createElement('div');
+    row.className=`msg-row ${role}`;
+    const msg=document.createElement('div');
+    msg.className=`msg ${role}`;
+    if(role==='assistant'){
+        msg.innerHTML=renderMarkdown(content);
+        msg.dataset.raw=content;
+        const actions=document.createElement('div');
+        actions.className='msg-actions';
+        actions.innerHTML=`<button class="msg-action-btn" title="导出 Markdown" onclick="exportMsgMarkdown(this)">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>MD</button>
+            <button class="msg-action-btn" title="导出 PDF" onclick="exportMsgPdf(this)">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M9 15h6"/><path d="M9 11h6"/></svg>PDF</button>`;
+        msg.appendChild(actions);
+    }
+    else msg.textContent=content;
+    row.appendChild(msg);
+    inner.appendChild(row);
+    scrollToBottom();
+    return msg;
+}
+
+function scrollToBottom(){
+    const el=document.getElementById('chat-messages');
+    el.scrollTo({top:el.scrollHeight,behavior:'smooth'});
+}
+
+// ---------------------------------------------------------------------------
+// Inline research process card
+// ---------------------------------------------------------------------------
+function ensureResearchCard(){
+    if(researchCard) return researchCard;
+    const inner=document.getElementById('chat-inner');
+    researchCard=document.createElement('div');
+    researchCard.className='research-card';
+    researchCard.innerHTML=`
+        <div class="rc-head">
+            <span class="rc-spinner" id="rc-spinner"></span>
+            <span class="rc-title">深度研究中</span>
+            <span class="rc-phase" id="rc-phase">准备中</span>
+        </div>
+        <div class="rc-timeline" id="rc-timeline"></div>`;
+    inner.appendChild(researchCard);
+    researchTimeline=researchCard.querySelector('#rc-timeline');
+    scrollToBottom();
+    return researchCard;
+}
+function setPhase(text){
+    const el=document.getElementById('rc-phase');
+    if(el){el.textContent=text;el.style.color='var(--accent)';}
+}
+function addTimelineItem(icon,text,type){
+    ensureResearchCard();
+    const item=document.createElement('div');
+    item.className=`tl-item ${type}`;
+    item.innerHTML=`<span class="tl-ico">${icon}</span><span class="tl-text">${text}</span>`;
+    researchTimeline.appendChild(item);
+    researchTimeline.scrollTop=researchTimeline.scrollHeight;
+    scrollToBottom();
+}
+function finishResearchCard(ok){
+    if(!researchCard) return;
+    researchCard.classList.add('done');
+    const sp=document.getElementById('rc-spinner');
+    if(sp){
+        const chk=document.createElement('span');
+        chk.className='rc-check';chk.innerHTML=SVG.check;
+        sp.replaceWith(chk);
+    }
+    const title=researchCard.querySelector('.rc-title');
+    if(title) title.textContent = ok ? '研究完成' : '研究结束';
+    const phase=document.getElementById('rc-phase');
+    if(phase) phase.style.display='none';
+}
+function clearResearchCard(){researchCard=null;researchTimeline=null;}
+
+// ---------------------------------------------------------------------------
+// WebSocket
+// ---------------------------------------------------------------------------
+function connectWebSocket(){
+    ws=new WebSocket(API.wsUrl);
+    ws.onopen=()=>console.log('WS connected');
+    ws.onmessage=(e)=>{try{handleWsMessage(JSON.parse(e.data));}catch(err){console.error(err);}};
+    ws.onerror=(err)=>console.error('WS error',err);
+    ws.onclose=()=>{console.log('WS closed, reconnect...');setTimeout(connectWebSocket,3000);};
+}
+
+function handleWsMessage(data){
+    const step=data.step||'';
+    const message=data.message||'';
+    const sd=data.data||{};
+
+    if(step==='session'){currentSessionId=sd.session_id;loadSessions();return;}
+
+    if(step==='planning'){
+        ensureResearchCard();
+        setPhase('规划搜索策略');
+        if(sd.queries&&sd.queries.length){
+            addTimelineItem(SVG.plan,`生成 <b>${sd.queries.length}</b> 个搜索关键词（多引擎）`, 'plan');
+            sd.queries.forEach(q=>addTimelineItem(SVG.search,`关键词：<b>${escapeHtml(q)}</b>`,'search'));
+        }else if(message){
+            addTimelineItem(SVG.plan,escapeHtml(message),'plan');
+        }
+        return;
+    }
+    if(step==='searching'){
+        setPhase('搜索中');
+        addTimelineItem(SVG.search, escapeHtml(message), 'search');
+        if(sd.results&&sd.results.length){
+            // Group results by engine for display
+            const engines={};
+            sd.results.forEach(r=>{
+                const e=r.engine||'other';
+                if(!engines[e])engines[e]=0;
+                engines[e]++;
+            });
+            const engineText=Object.entries(engines).map(([e,c])=>`${ENGINE_NAMES[e]||e} ${c}条`).join('、');
+            addTimelineItem(SVG.search, `找到 <b>${sd.results.length}</b> 条结果（${engineText}）`,'search');
+        }
+        return;
+    }
+    if(step==='reading'){
+        setPhase('阅读与提取');
+        const extra = sd.facts_count ? ` · 提取 <b>${sd.facts_count}</b> 条事实` : '';
+        addTimelineItem(SVG.read, escapeHtml(message)+extra, 'read');
+        return;
+    }
+    if(step==='synthesizing'){
+        if(sd.streaming){
+            // collapse research card, stream report below
+            if(researchCard && !researchCard.classList.contains('done')){
+                finishResearchCard(true);
+            }
+            if(!currentStreamingMsg){
+                currentStreamingMsg=addMessageToUI('assistant','');
+                currentStreamingMsg.classList.add('msg-cursor');
+            }
+            currentStreamingMsg.dataset.raw=(currentStreamingMsg.dataset.raw||'')+message;
+            currentStreamingMsg.innerHTML=renderMarkdown(currentStreamingMsg.dataset.raw)+`<span class="msg-cursor-after"></span>`;
+            // re-add cursor class since innerHTML resets it
+            scrollToBottom();
+        }else if(message){
+            setPhase('生成报告中');
+            addTimelineItem(SVG.synth, escapeHtml(message),'synth');
+        }
+        return;
+    }
+    if(step==='done'){
+        if(message){
+            if(currentStreamingMsg){
+                currentStreamingMsg.dataset.raw=message;
+                currentStreamingMsg.innerHTML=renderMarkdown(message);
+                currentStreamingMsg.classList.remove('msg-cursor');
+            }else{
+                addMessageToUI('assistant',message);
+            }
+        }else if(currentStreamingMsg){
+            currentStreamingMsg.classList.remove('msg-cursor');
+        }
+        if(researchCard) finishResearchCard(true);
+        currentStreamingMsg=null;clearResearchCard();
+        isResearching=false;updateSendButton();loadSessions();
+        return;
+    }
+    if(step==='complete'){
+        if(currentStreamingMsg) currentStreamingMsg.classList.remove('msg-cursor');
+        if(researchCard) finishResearchCard(true);
+        currentStreamingMsg=null;clearResearchCard();
+        isResearching=false;updateSendButton();loadSessions();
+        return;
+    }
+    if(step==='error'){
+        if(researchCard) finishResearchCard(false);
+        clearResearchCard();
+        isResearching=false;updateSendButton();
+        addMessageToUI('assistant',`> **错误**：${escapeHtml(message)}`);
+        return;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Send
+// ---------------------------------------------------------------------------
+function sendMessage(){
+    const input=document.getElementById('message-input');
+    const message=input.value.trim();
+    if(!message||isResearching) return;
+    if(!ws||ws.readyState!==WebSocket.OPEN){alert('连接未就绪，请稍候...');return;}
+    const send=()=>{
+        addMessageToUI('user',message);
+        input.value='';input.style.height='auto';
+        isResearching=true;updateSendButton();
+        currentStreamingMsg=null;clearResearchCard();
+        ws.send(JSON.stringify({session_id:currentSessionId,message}));
+    };
+    if(!currentSessionId){
+        createSession().then(send);
+        return;
+    }
+    send();
+}
+function updateSendButton(){
+    const btn=document.getElementById('send-btn');
+    const input=document.getElementById('message-input');
+    btn.disabled=isResearching||!input.value.trim();
+}
+
+// ---------------------------------------------------------------------------
+// Model config
+// ---------------------------------------------------------------------------
+async function loadModelCandidates(){
+    const hint=document.getElementById('model-loading-hint');
+    const sel=document.getElementById('config-model-name');
+    const cur=sel.dataset.current||'';
+    hint.textContent='加载中...';
+    sel.innerHTML='<option value="">加载中...</option>';
+    try{
+        const resp=await fetch(API.modelList);
+        const data=await resp.json();
+        sel.innerHTML='';
+        let curInList=false;
+        (data.models||[]).forEach(m=>{
+            const o=document.createElement('option');
+            o.value=m;o.textContent=m;
+            if(m===cur)curInList=true;
+            sel.appendChild(o);
+        });
+        if(cur && !curInList){
+            const o=document.createElement('option');
+            o.value=cur;o.textContent=cur+' (当前)';
+            sel.appendChild(o);
+        }
+        const custom=document.createElement('option');
+        custom.value='__custom__';custom.textContent='— 自定义输入 —';
+        sel.appendChild(custom);
+        if(cur){sel.value=cur;}
+        const customInput=document.getElementById('config-model-custom');
+        customInput.style.display='none';customInput.value='';
+        hint.textContent=(data.models&&data.models.length)?`${data.models.length} 个候选可用`:'无候选';
+        return data;
+    }catch(e){
+        sel.innerHTML='<option value="__custom__">加载失败 — 请自定义</option>';
+        hint.textContent='候选加载失败';
+        document.getElementById('config-model-custom').style.display='block';
+        return {models:[],current:null};
+    }
+}
+
+async function loadModelConfig(){
+    try{
+        const resp=await fetch(API.modelConfig);
+        const cfg=await resp.json();
+        document.getElementById('config-base-url').value=cfg.base_url||'';
+        document.getElementById('config-api-key').value='';
+        document.getElementById('config-api-key').placeholder=cfg.api_key||'sk-...';
+        document.getElementById('config-model-name').dataset.current=cfg.model_name||'';
+        document.getElementById('config-temperature').value=cfg.temperature??0.3;
+        document.getElementById('config-max-tokens').value=cfg.max_tokens??4096;
+        updateModelPill(cfg.model_name);
+        return cfg;
+    }catch(e){console.error('loadModelConfig error:',e);return {};}
+}
+
+function updateModelPill(name){
+    document.getElementById('pill-model-name').textContent = name||'未配置';
+}
+
+async function saveModelConfig(){
+    const sel=document.getElementById('config-model-name');
+    let modelName=sel.value==='__custom__'
+        ? document.getElementById('config-model-custom').value.trim()
+        : sel.value.trim();
+    const config={
+        base_url:document.getElementById('config-base-url').value.trim()||null,
+        api_key:document.getElementById('config-api-key').value.trim()||null,
+        model_name: modelName || null,
+        temperature:parseFloat(document.getElementById('config-temperature').value)||null,
+        max_tokens:parseInt(document.getElementById('config-max-tokens').value)||null,
+    };
+    const status=document.getElementById('config-status');
+    status.className='config-status show loading';
+    status.textContent='保存中...';
+    try{
+        const resp=await fetch(API.modelConfig,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(config)});
+        const result=await resp.json();
+        status.className='config-status show success';
+        status.textContent=`已保存：${result.model_name}`;
+        updateModelPill(result.model_name);
+        setTimeout(()=>{document.getElementById('config-modal').classList.remove('show');},900);
+    }catch(e){
+        status.className='config-status show error';
+        status.textContent=`保存失败：${e.message}`;
+    }
+}
+
+async function openConfigModal(){
+    document.getElementById('config-modal').classList.add('show');
+    await loadModelConfig();
+    await loadModelCandidates();
+}
+function closeConfigModal(){
+    document.getElementById('config-modal').classList.remove('show');
+}
+
+// ---------------------------------------------------------------------------
+// Export utilities
+// ---------------------------------------------------------------------------
+function downloadFile(filename,content,mimeType){
+    const blob=new Blob([content],{type:mimeType});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;a.download=filename;
+    document.body.appendChild(a);a.click();
+    document.body.removeChild(a);URL.revokeObjectURL(url);
+}
+function sanitizeFilename(name){
+    return name.replace(/[\\/:*?"<>|]/g,'_').replace(/\s+/g,'_').substring(0,50);
+}
+function formatTimestamp(){
+    const d=new Date();
+    return `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}_${String(d.getHours()).padStart(2,'0')}${String(d.getMinutes()).padStart(2,'0')}`;
+}
+
+// ---------------------------------------------------------------------------
+// Markdown export
+// ---------------------------------------------------------------------------
+function exportMsgMarkdown(btn){
+    const msg=btn.closest('.msg.assistant');
+    if(!msg||!msg.dataset.raw) return;
+    const title=document.getElementById('current-session-title').textContent||'research';
+    const filename=sanitizeFilename(title)+'-'+formatTimestamp()+'.md';
+    downloadFile(filename,msg.dataset.raw,'text/markdown;charset=utf-8');
+}
+
+async function exportSessionMarkdown(){
+    if(!currentSessionId) return;
+    try{
+        const resp=await fetch(`${API.sessions}/${currentSessionId}`);
+        const session=await resp.json();
+        let md='';
+        md+=`# ${session.title||'未命名会话'}\n\n`;
+        md+=`> 导出时间: ${new Date().toLocaleString('zh-CN')}\n\n---\n\n`;
+        if(session.short_term){
+            session.short_term.forEach(m=>{
+                if(m.role==='user') md+=`## 用户\n\n${m.content}\n\n`;
+                else if(m.role==='assistant') md+=`## 助手\n\n${m.content}\n\n`;
+            });
+        }
+        if(session.long_term&&session.long_term.length){
+            md+=`---\n\n## 历史对话摘要\n\n`;
+            session.long_term.forEach((s,i)=>{md+=`### 摘要 ${i+1}\n\n${s.summary||s}\n\n`;});
+        }
+        if(session.research&&session.research.length){
+            md+=`---\n\n## 研究资料\n\n`;
+            session.research.forEach((r,i)=>{
+                md+=`### [${i+1}] ${r.source_title||'未知来源'}\n\n`;
+                md+=`- **事实**: ${r.fact}\n`;
+                md+=`- **来源**: [${r.source_title||'链接'}](${r.source_url||''})\n`;
+                md+=`- **搜索词**: ${r.query||''}\n\n`;
+            });
+        }
+        const filename=sanitizeFilename(session.title||'session')+'-'+formatTimestamp()+'.md';
+        downloadFile(filename,md,'text/markdown;charset=utf-8');
+    }catch(e){console.error('exportSessionMarkdown error:',e);alert('导出失败：'+e.message);}
+}
+
+// ---------------------------------------------------------------------------
+// PDF export
+// ---------------------------------------------------------------------------
+function buildPdfHtml(title,bodyHtml){
+    return `<div style="font-family:Inter,-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;color:#1a1a2e;padding:24px;background:#fff;line-height:1.7;font-size:13px;">
+<h1 style="font-size:22px;margin-bottom:4px;color:#1a1a2e;">${escapeHtml(title||'未命名会话')}</h1>
+<p style="color:#888;font-size:12px;margin-bottom:16px;">导出时间: ${new Date().toLocaleString('zh-CN')}</p>
+<hr style="border:none;border-top:1px solid #e0e0e0;margin:16px 0;">
+${bodyHtml}
+</div>`;
+}
+
+function markdownToPdfHtml(text){
+    if(!text) return '';
+    let html=renderMarkdown(text);
+    // override all dark-theme styles with inline light-theme overrides
+    // wrap in a div so we can style descendants
+    return `<div style="color:#1a1a2e;">${html}</div>`;
+}
+
+function renderPdfElement(html,filename){
+    const wrapper=document.createElement('div');
+    wrapper.innerHTML=html;
+    // apply light overrides to all rendered markdown elements inside
+    wrapper.querySelectorAll('h1,h2,h3,h4').forEach(h=>{h.style.color='#1a1a2e';h.style.margin='14px 0 8px';h.style.fontWeight='700';});
+    wrapper.querySelectorAll('h1').forEach(h=>h.style.fontSize='19px');
+    wrapper.querySelectorAll('h2').forEach(h=>h.style.fontSize='16.5px');
+    wrapper.querySelectorAll('h3').forEach(h=>h.style.fontSize='15px');
+    wrapper.querySelectorAll('p').forEach(p=>p.style.margin='9px 0');
+    wrapper.querySelectorAll('strong').forEach(s=>s.style.color='#1a1a2e');
+    wrapper.querySelectorAll('a').forEach(a=>a.style.color='#4a9eff');
+    wrapper.querySelectorAll('code').forEach(c=>{c.style.background='#f0f0f0';c.style.color='#333';c.style.padding='2px 6px';c.style.borderRadius='5px';c.style.fontSize='12.8px';});
+    wrapper.querySelectorAll('pre').forEach(p=>{p.style.background='#f5f5f5';p.style.border='1px solid #e0e0e0';p.style.padding='14px';p.style.borderRadius='10px';p.style.overflow='auto';});
+    wrapper.querySelectorAll('pre code').forEach(c=>{c.style.background='none';c.style.padding='0';c.style.fontSize='13px';});
+    wrapper.querySelectorAll('blockquote').forEach(bq=>{bq.style.borderLeft='3px solid #4a9eff';bq.style.background='#f0f7ff';bq.style.color='#555';bq.style.padding='4px 14px';bq.style.margin='10px 0';});
+    wrapper.querySelectorAll('table').forEach(t=>{t.style.borderCollapse='collapse';t.style.width='100%';t.style.fontSize='13px';t.style.margin='10px 0';});
+    wrapper.querySelectorAll('th,td').forEach(c=>{c.style.border='1px solid #ddd';c.style.padding='7px 11px';});
+    wrapper.querySelectorAll('th').forEach(th=>{th.style.background='#f0f0f0';th.style.color='#1a1a2e';th.style.fontWeight='600';});
+    wrapper.querySelectorAll('ul,ol').forEach(l=>{l.style.margin='9px 0';l.style.paddingLeft='22px';});
+    wrapper.querySelectorAll('li').forEach(l=>l.style.margin='5px 0');
+
+    document.body.appendChild(wrapper);
+
+    const opt={
+        margin:[10,10,10,10],filename:filename,
+        image:{type:'jpeg',quality:0.95},
+        html2canvas:{scale:2,useCORS:true,backgroundColor:'#ffffff',logging:false},
+        jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},
+        pagebreak:{mode:['avoid-all','css','legacy']}
+    };
+    html2pdf().set(opt).from(wrapper).save().then(()=>{document.body.removeChild(wrapper);})
+    .catch(err=>{console.error('PDF export error:',err);if(wrapper.parentNode)document.body.removeChild(wrapper);});
+}
+
+function exportMsgPdf(btn){
+    const msg=btn.closest('.msg.assistant');
+    if(!msg||!msg.dataset.raw) return;
+    if(typeof html2pdf==='undefined'){alert('PDF 库加载失败，请使用浏览器打印（Ctrl+P）或稍后重试');return;}
+    const title=document.getElementById('current-session-title').textContent||'research';
+    const filename=sanitizeFilename(title)+'-'+formatTimestamp()+'.pdf';
+    const bodyHtml=markdownToPdfHtml(msg.dataset.raw);
+    const html=buildPdfHtml(title,bodyHtml);
+    renderPdfElement(html,filename);
+}
+
+async function exportSessionPdf(){
+    if(!currentSessionId) return;
+    if(typeof html2pdf==='undefined'){alert('PDF 库加载失败，请使用浏览器打印（Ctrl+P）或稍后重试');return;}
+    try{
+        const resp=await fetch(`${API.sessions}/${currentSessionId}`);
+        const session=await resp.json();
+        let body='';
+
+        if(session.short_term){
+            session.short_term.forEach(m=>{
+                if(m.role==='user'){
+                    body+=`<div style="background:#f0f7ff;padding:10px 14px;border-radius:8px;margin:12px 0;border-left:3px solid #4a9eff;">`;
+                    body+=`<div style="font-size:11px;color:#4a9eff;font-weight:600;margin-bottom:4px;">用户</div>`;
+                    body+=`<div style="font-size:13px;color:#1a1a2e;">${escapeHtml(m.content)}</div></div>`;
+                }else if(m.role==='assistant'){
+                    body+=`<div style="background:#fafafa;padding:10px 14px;border-radius:8px;margin:12px 0;border:1px solid #e8e8e8;">`;
+                    body+=`<div style="font-size:11px;color:#888;font-weight:600;margin-bottom:4px;">助手</div>`;
+                    body+=`<div style="font-size:13px;line-height:1.7;color:#1a1a2e;">${renderMarkdown(m.content)}</div></div>`;
+                }
+            });
+        }
+
+        if(session.research&&session.research.length){
+            body+=`<hr style="border:none;border-top:1px solid #e0e0e0;margin:20px 0;">`;
+            body+=`<h2 style="font-size:18px;color:#1a1a2e;">研究资料 (${session.research.length} 条)</h2>`;
+            session.research.forEach((r,i)=>{
+                body+=`<div style="margin:10px 0;padding:8px 12px;background:#fafafa;border-radius:6px;border-left:3px solid #4a9eff;">`;
+                body+=`<div style="font-size:12px;font-weight:600;margin-bottom:3px;color:#1a1a2e;">[${i+1}] ${escapeHtml(r.source_title||'未知来源')}</div>`;
+                body+=`<div style="font-size:12px;color:#555;">${escapeHtml(r.fact)}</div>`;
+                body+=`<div style="font-size:10px;color:#999;margin-top:3px;">搜索词: ${escapeHtml(r.query||'')}</div>`;
+                body+=`</div>`;
+            });
+        }
+
+        const html=buildPdfHtml(session.title,body);
+        const filename=sanitizeFilename(session.title||'session')+'-'+formatTimestamp()+'.pdf';
+        renderPdfElement(html,filename);
+    }catch(e){console.error('exportSessionPdf error:',e);alert('导出失败：'+e.message);}
+}
+
+// ---------------------------------------------------------------------------
+// Delete
+// ---------------------------------------------------------------------------
+async function deleteCurrentSession(){
+    if(!currentSessionId) return;
+    if(!confirm('确定删除当前会话？所有记忆将被清除。')) return;
+    await fetch(`${API.sessions}/${currentSessionId}`,{method:'DELETE'});
+    currentSessionId=null;
+    document.getElementById('current-session-title').textContent='选择或新建一个会话';
+    document.getElementById('delete-session-btn').style.display='none';
+    document.getElementById('export-session-md').style.display='none';
+    document.getElementById('export-session-pdf').style.display='none';
+    showWelcome();
+    await loadSessions();
+}
+
+// ---------------------------------------------------------------------------
+// Init
+// ---------------------------------------------------------------------------
+document.addEventListener('DOMContentLoaded',()=>{
+    document.getElementById('new-session-btn').onclick=createSession;
+    document.getElementById('delete-session-btn').onclick=deleteCurrentSession;
+    document.getElementById('export-session-md').onclick=exportSessionMarkdown;
+    document.getElementById('export-session-pdf').onclick=exportSessionPdf;
+    document.getElementById('send-btn').onclick=sendMessage;
+    const input=document.getElementById('message-input');
+    input.addEventListener('input',()=>{
+        input.style.height='auto';
+        input.style.height=Math.min(input.scrollHeight,140)+'px';
+        updateSendButton();
+    });
+    input.addEventListener('keydown',(e)=>{
+        if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}
+    });
+    document.getElementById('model-pill').onclick=openConfigModal;
+    document.getElementById('config-btn')&&(document.getElementById('config-btn').onclick=openConfigModal);
+    document.getElementById('close-config').onclick=closeConfigModal;
+    document.getElementById('save-config').onclick=saveModelConfig;
+    document.getElementById('refresh-models').onclick=loadModelCandidates;
+    document.getElementById('config-model-name').addEventListener('change',(e)=>{
+        const c=document.getElementById('config-model-custom');
+        if(e.target.value==='__custom__'){c.style.display='block';c.focus();}
+        else{c.style.display='none';}
+    });
+    document.getElementById('config-modal').addEventListener('click',(e)=>{
+        if(e.target.id==='config-modal') closeConfigModal();
+    });
+    document.addEventListener('keydown',(e)=>{
+        if(e.key==='Escape') closeConfigModal();
+    });
+    showWelcome();
+    loadSessions();
+    loadModelConfig();
+    connectWebSocket();
+});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" crossorigin="anonymous"></script>
+</body>
+</html>
