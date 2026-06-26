@@ -15,8 +15,8 @@ SESSIONS_DIR.mkdir(parents=True, exist_ok=True)
 class ModelConfig:
     """Configurable base model via IP/base_url + api_key."""
 
-    base_url: str = os.environ.get("DR_MODEL_BASE_URL", "http://amu.dbh.baidu-int.com/v1")
-    api_key: str = os.environ.get("DR_MODEL_API_KEY", "sk-oXC9rgXuXSKLuSA5JFZF0pE62adTWEipF5dHv9la2u6SFYQm")
+    base_url: str = os.environ.get("DR_MODEL_BASE_URL", "")
+    api_key: str = os.environ.get("DR_MODEL_API_KEY", "")
     model_name: str = os.environ.get("DR_MODEL_NAME", "deepseek-v3.1")
     temperature: float = float(os.environ.get("DR_MODEL_TEMPERATURE", "0.3"))
     max_tokens: int = int(os.environ.get("DR_MODEL_MAX_TOKENS", "4096"))
@@ -32,7 +32,7 @@ class SearchConfig:
     fetch_timeout: int = 10
     max_content_length: int = 5000  # chars per page
     use_https: bool = False  # HTTP by default for better proxy compatibility
-    proxy: str = os.environ.get("DR_SEARCH_PROXY", "http://amu_2026:amu_2026_test@10.61.124.44:8600")
+    proxy: str = os.environ.get("DR_SEARCH_PROXY", "")
     engines: list[str] = field(
         default_factory=lambda: os.environ.get(
             "DR_SEARCH_ENGINES", "baidu,google,scholar,arxiv"
