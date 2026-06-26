@@ -9,6 +9,10 @@ BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data"
 SESSIONS_DIR = DATA_DIR / "sessions"
 SESSIONS_DIR.mkdir(parents=True, exist_ok=True)
+EVALS_DIR = DATA_DIR / "evals"
+EVALS_DIR.mkdir(parents=True, exist_ok=True)
+DATASETS_DIR = DATA_DIR / "datasets"
+DATASETS_DIR.mkdir(parents=True, exist_ok=True)
 
 
 @dataclass
@@ -51,10 +55,19 @@ class AgentConfig:
 
 
 @dataclass
+class EvalConfig:
+    """Evaluation/benchmark configuration."""
+
+    delay_between_questions: float = 0  # seconds between questions (rate limit protection)
+    max_concurrent_models: int = 4
+
+
+@dataclass
 class Settings:
     model: ModelConfig = field(default_factory=ModelConfig)
     search: SearchConfig = field(default_factory=SearchConfig)
     agent: AgentConfig = field(default_factory=AgentConfig)
+    eval: EvalConfig = field(default_factory=EvalConfig)
     server_host: str = os.environ.get("DR_HOST", "0.0.0.0")
     server_port: int = int(os.environ.get("DR_PORT", "7860"))
 

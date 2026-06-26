@@ -15,7 +15,10 @@ from pydantic import BaseModel
 from agent.core import agent, ResearchStep, ResearchCancelledError
 from agent.llm import llm_client
 from agent.memory import memory
-from config import settings, ModelConfig
+from config import settings, ModelConfig, EVALS_DIR
+from eval.datasets import list_datasets, load_dataset
+from eval.models import EvalRun
+from eval.runner import EvalRunner
 
 logger = logging.getLogger(__name__)
 
@@ -49,6 +52,19 @@ class ModelConfigRequest(BaseModel):
 
 class SetTitleRequest(BaseModel):
     title: str
+
+
+class EvalModelConfig(BaseModel):
+    model_name: str
+    base_url: str = ""
+    api_key: str = ""
+
+
+class EvalStartRequest(BaseModel):
+    dataset: str
+    models: list[EvalModelConfig]
+    subjects: list[str] = []
+    limit: int | None = None
 
 
 # ---------------------------------------------------------------------------
@@ -149,6 +165,169 @@ async def set_model_config(req: ModelConfigRequest):
         "temperature": llm_client.config.temperature,
         "max_tokens": llm_client.config.max_tokens,
     }
+
+
+# ---------------------------------------------------------------------------
+# Routes - Evaluation / Benchmark
+# ---------------------------------------------------------------------------
+@app.get("/api/eval/datasets")
+async def eval_list_datasets():
+    """List available benchmark datasets with subjects and question counts."""
+    return JSONResponse(list_datasets())
+
+
+@app.get("/api/eval/runs")
+async def eval_list_runs():
+    """List past evaluation runs."""
+    runs = []
+    for path in sorted(EVALS_DIR.glob("*.json"), key=lambda p: p.stat().st_mtime, reverse=True):
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+            runs.append({
+                "id": data["id"],
+                "dataset_name": data.get("dataset_name", ""),
+                "status": data.get("status", ""),
+                "created_at": data.get("created_at", 0),
+                "completed_at": data.get("completed_at", 0),
+                "num_questions": data.get("num_questions", 0),
+                "models": [m.get("model_name", "") for m in data.get("models", [])],
+                "summary": data.get("summary", {}),
+            })
+        except Exception:
+            continue
+    return JSONResponse(runs)
+
+
+@app.get("/api/eval/runs/{eval_id}")
+async def eval_get_run(eval_id: str):
+    """Get a specific evaluation run with full results."""
+    run = EvalRun.load(eval_id)
+    if run is None:
+        return JSONResponse({"error": "Eval run not found"}, status_code=404)
+    return JSONResponse(run.to_dict())
+
+
+@app.get("/api/eval/runs/{eval_id}/cases")
+async def eval_get_cases(eval_id: str, subject: str = "", model: str = "", offset: int = 0, limit: int = 50):
+    """Get question-level detail for case analysis."""
+    run = EvalRun.load(eval_id)
+    if run is None:
+        return JSONResponse({"error": "Eval run not found"}, status_code=404)
+
+    results = run.results
+    if subject:
+        results = [r for r in results if r.get("subject") == subject]
+    if model:
+        results = [r for r in results if r.get("model_name") == model]
+
+    # Group by question_id
+    by_question: dict[str, list] = {}
+    for r in results:
+        qid = r.get("question_id", "")
+        if qid not in by_question:
+            by_question[qid] = []
+        by_question[qid].append(r)
+
+    # Load question text from dataset
+    question_texts: dict[str, str] = {}
+    try:
+        questions = load_dataset(run.dataset_name, subjects=[subject] if subject else None)
+        question_texts = {q.question_id: q.question for q in questions}
+    except Exception:
+        pass
+
+    cases = []
+    for qid, answers in sorted(by_question.items()):
+        cases.append({
+            "question_id": qid,
+            "question": question_texts.get(qid, ""),
+            "subject": answers[0].get("subject", "") if answers else "",
+            "correct_answer": answers[0].get("correct_answer", "") if answers else "",
+            "answers": answers,
+        })
+
+    total = len(cases)
+    cases = cases[offset:offset + limit]
+
+    return JSONResponse({"total": total, "cases": cases})
+
+
+@app.delete("/api/eval/runs/{eval_id}")
+async def eval_delete_run(eval_id: str):
+    """Delete an evaluation run."""
+    path = EVALS_DIR / f"{eval_id}.json"
+    if path.exists():
+        path.unlink()
+        return {"deleted": True}
+    return {"deleted": False}
+
+
+# Global eval runner reference for cancellation
+_current_eval_runner: EvalRunner | None = None
+
+
+@app.websocket("/ws/eval")
+async def ws_eval(ws: WebSocket):
+    """WebSocket endpoint for running benchmark evaluations with progress streaming."""
+    global _current_eval_runner
+    await ws.accept()
+    try:
+        while True:
+            raw = await ws.receive_text()
+            data = json.loads(raw)
+
+            # Handle cancel
+            if data.get("action") == "cancel":
+                if _current_eval_runner:
+                    _current_eval_runner.cancel()
+                continue
+
+            # Handle start
+            if data.get("action") != "start":
+                continue
+
+            dataset_name = data.get("dataset", "")
+            models = data.get("models", [])
+            subjects = data.get("subjects", [])
+            limit = data.get("limit")
+
+            if not dataset_name or not models:
+                await ws.send_text(json.dumps({"step": "error", "message": "缺少数据集或模型参数"}, ensure_ascii=False))
+                continue
+
+            # Create eval run
+            eval_run = EvalRun(
+                dataset_name=dataset_name,
+                models=[m if isinstance(m, dict) else m.model_dump() for m in models],
+                subject_filter=subjects,
+                num_questions=limit or 0,
+                status="pending",
+            )
+            eval_run.save()
+
+            # Run in background thread
+            loop = asyncio.get_event_loop()
+            queue: asyncio.Queue = asyncio.Queue()
+
+            runner = EvalRunner(eval_run, loop, queue)
+            _current_eval_runner = runner
+
+            worker = threading.Thread(target=runner.run, daemon=True)
+            worker.start()
+
+            try:
+                while True:
+                    item = await queue.get()
+                    await ws.send_text(json.dumps(item, ensure_ascii=False))
+                    if item.get("step") in ("done", "error", "cancelled"):
+                        break
+            finally:
+                _current_eval_runner = None
+
+    except WebSocketDisconnect:
+        logger.info("Eval WebSocket disconnected")
+    except Exception as e:
+        logger.error(f"Eval WebSocket error: {e}", exc_info=True)
 
 
 # ---------------------------------------------------------------------------
