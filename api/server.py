@@ -12,7 +12,7 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from agent.core import agent, ResearchStep
+from agent.core import agent, ResearchStep, ResearchCancelledError
 from agent.llm import llm_client
 from agent.memory import memory
 from config import settings, ModelConfig
@@ -162,8 +162,15 @@ async def ws_chat(ws: WebSocket):
         while True:
             raw = await ws.receive_text()
             data = json.loads(raw)
+
+            # Handle cancel message
+            if data.get("action") == "cancel":
+                agent.cancel()
+                continue
+
             session_id = data.get("session_id", "")
             message = data.get("message", "")
+            mode = data.get("mode", "auto")  # "auto" | "research" | "chat"
 
             session = memory.get_session(session_id)
             if session is None:
@@ -191,8 +198,10 @@ async def ws_chat(ws: WebSocket):
 
             def _run_agent():
                 try:
-                    for step in agent.chat(message, session_id):
+                    for step in agent.chat(message, session_id, mode=mode):
                         loop.call_soon_threadsafe(queue.put_nowait, step)
+                except ResearchCancelledError:
+                    loop.call_soon_threadsafe(queue.put_nowait, "cancelled")
                 except Exception as e:  # noqa: BLE001
                     loop.call_soon_threadsafe(queue.put_nowait, e)
                 finally:
@@ -205,6 +214,12 @@ async def ws_chat(ws: WebSocket):
                 while True:
                     item = await queue.get()
                     if item is None:
+                        break
+                    if isinstance(item, str) and item == "cancelled":
+                        await ws.send_text(json.dumps({
+                            "step": "cancelled",
+                            "message": "研究已取消",
+                        }, ensure_ascii=False))
                         break
                     if isinstance(item, Exception):
                         logger.error(f"Agent error: {item}", exc_info=item)

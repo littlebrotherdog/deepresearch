@@ -259,6 +259,15 @@ body{
 .btn-icon:hover{background:var(--panel-strong);border-color:var(--border-strong);color:var(--text);transform:translateY(-1px)}
 .btn-icon svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2}
 .btn-icon.danger:hover{color:var(--err);border-color:rgba(251,113,133,.4)}
+
+/* Mode toggle */
+.mode-toggle{display:flex;background:rgba(0,0,0,.3);border-radius:10px;padding:2px;gap:2px;flex-shrink:0}
+.mode-opt{
+    background:none;border:none;color:var(--text-3);font-size:12px;font-weight:600;
+    padding:5px 10px;border-radius:8px;cursor:pointer;transition:all .2s var(--ease);white-space:nowrap;
+}
+.mode-opt:hover{color:var(--text-2)}
+.mode-opt.active{background:var(--grad);color:#fff;box-shadow:0 3px 10px -3px rgba(124,140,255,.5)}
 .btn-new{
     background:var(--grad);color:#fff;border:none;padding:8px 14px;border-radius:11px;cursor:pointer;
     font-size:12.5px;font-weight:600;transition:all .3s var(--ease);box-shadow:0 6px 18px -6px rgba(124,140,255,.55);
@@ -394,10 +403,16 @@ body{
 
         <div class="input-bar">
             <div class="input-wrap">
+                <div id="mode-toggle" class="mode-toggle" title="切换研究模式">
+                    <button class="mode-opt active" data-mode="auto">自动</button>
+                    <button class="mode-opt" data-mode="research">研究</button>
+                    <button class="mode-opt" data-mode="chat">对话</button>
+                </div>
                 <textarea id="message-input" placeholder="输入你的问题，Agent 将自动搜索并深度研究..." rows="1"></textarea>
                 <button id="send-btn" class="btn-send" disabled>
-                    <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-                    发送
+                    <svg id="send-icon" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                    <svg id="stop-icon" viewBox="0 0 24 24" style="display:none;width:15px;height:15px;fill:currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
+                    <span id="send-label">发送</span>
                 </button>
             </div>
             <div class="input-hint">Enter 发送 · Shift+Enter 换行</div>
@@ -461,6 +476,7 @@ let currentSessionId = null;
 let ws = null;
 let isResearching = false;
 let currentStreamingMsg = null;
+let currentMode = "auto"; // "auto" | "research" | "chat"
 
 // Engine display names
 const ENGINE_NAMES = {baidu:'百度',google:'Google',scholar:'Scholar',arxiv:'arXiv'};
@@ -794,6 +810,19 @@ function handleWsMessage(data){
         addMessageToUI('assistant',`> **错误**：${escapeHtml(message)}`);
         return;
     }
+    if(step==='cancelled'){
+        if(currentStreamingMsg){
+            currentStreamingMsg.classList.remove('msg-cursor');
+            // Show partial content if any
+            const raw=currentStreamingMsg.dataset.raw||'';
+            if(!raw.trim()) currentStreamingMsg.closest('.msg-row')?.remove();
+        }
+        if(researchCard) finishResearchCard(false);
+        clearResearchCard();
+        isResearching=false;updateSendButton();
+        addMessageToUI('assistant','> 研究已取消');
+        return;
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -802,14 +831,24 @@ function handleWsMessage(data){
 function sendMessage(){
     const input=document.getElementById('message-input');
     const message=input.value.trim();
-    if(!message||isResearching) return;
+
+    // If researching, send cancel
+    if(isResearching){
+        if(ws&&ws.readyState===WebSocket.OPEN){
+            ws.send(JSON.stringify({action:"cancel"}));
+            isResearching=false;updateSendButton();
+        }
+        return;
+    }
+
+    if(!message) return;
     if(!ws||ws.readyState!==WebSocket.OPEN){alert('连接未就绪，请稍候...');return;}
     const send=()=>{
         addMessageToUI('user',message);
         input.value='';input.style.height='auto';
         isResearching=true;updateSendButton();
         currentStreamingMsg=null;clearResearchCard();
-        ws.send(JSON.stringify({session_id:currentSessionId,message}));
+        ws.send(JSON.stringify({session_id:currentSessionId,message,mode:currentMode}));
     };
     if(!currentSessionId){
         createSession().then(send);
@@ -820,7 +859,25 @@ function sendMessage(){
 function updateSendButton(){
     const btn=document.getElementById('send-btn');
     const input=document.getElementById('message-input');
-    btn.disabled=isResearching||!input.value.trim();
+    const sendIcon=document.getElementById('send-icon');
+    const stopIcon=document.getElementById('stop-icon');
+    const sendLabel=document.getElementById('send-label');
+
+    if(isResearching){
+        btn.disabled=false;
+        sendIcon.style.display='none';
+        stopIcon.style.display='block';
+        sendLabel.textContent='停止';
+        btn.style.background='var(--err)';
+        btn.style.boxShadow='0 8px 22px -8px rgba(251,113,133,.6)';
+    }else{
+        btn.disabled=!input.value.trim();
+        sendIcon.style.display='block';
+        stopIcon.style.display='none';
+        sendLabel.textContent='发送';
+        btn.style.background='';
+        btn.style.boxShadow='';
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -1112,6 +1169,18 @@ document.addEventListener('DOMContentLoaded',()=>{
     document.getElementById('export-session-md').onclick=exportSessionMarkdown;
     document.getElementById('export-session-pdf').onclick=exportSessionPdf;
     document.getElementById('send-btn').onclick=sendMessage;
+    // Mode toggle
+    document.querySelectorAll('.mode-opt').forEach(btn=>{
+        btn.onclick=()=>{
+            document.querySelectorAll('.mode-opt').forEach(b=>b.classList.remove('active'));
+            btn.classList.add('active');
+            currentMode=btn.dataset.mode;
+            const input=document.getElementById('message-input');
+            if(currentMode==='research') input.placeholder='输入研究问题，Agent 将进行多引擎深度搜索...';
+            else if(currentMode==='chat') input.placeholder='输入问题，Agent 将直接对话...';
+            else input.placeholder='输入你的问题，Agent 将自动搜索并深度研究...';
+        };
+    });
     const input=document.getElementById('message-input');
     input.addEventListener('input',()=>{
         input.style.height='auto';

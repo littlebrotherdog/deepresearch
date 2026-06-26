@@ -32,6 +32,10 @@ def _engine_label(engine: str) -> str:
     return ENGINE_LABELS.get(engine, engine)
 
 
+class ResearchCancelledError(Exception):
+    """Raised when the user cancels a running research."""
+
+
 @dataclass
 class ResearchStep:
     """A single step in the research process, for streaming to frontend."""
@@ -46,6 +50,17 @@ class DeepResearchAgent:
     def __init__(self):
         self.search_config = settings.search
         self.agent_config = settings.agent
+        self._cancelled = False
+
+    def cancel(self):
+        """Signal the current research to stop."""
+        self._cancelled = True
+
+    def _check_cancelled(self):
+        """Raise if research was cancelled."""
+        if self._cancelled:
+            self._cancelled = False
+            raise ResearchCancelledError()
 
     def research(
         self,
@@ -55,12 +70,14 @@ class DeepResearchAgent:
         max_iterations: int | None = None,
     ) -> Iterator[ResearchStep]:
         """Execute deep research, yielding steps for progress display."""
+        self._cancelled = False
         max_iter = max_iterations or self.agent_config.max_research_iterations
         all_notes: list[ResearchNote] = []
         all_sources: list[dict] = []
         seen_urls: set[str] = set()
 
         # --- Step 1: Planning - generate search queries ---
+        self._check_cancelled()
         yield ResearchStep("planning", "正在分析问题并生成搜索策略...")
 
         context_msgs = memory.build_context_messages(session_id, query)
@@ -84,6 +101,7 @@ class DeepResearchAgent:
 
         # --- Step 2: Searching & Reading ---
         for qi, sq in enumerate(queries):
+            self._check_cancelled()
             if len(all_sources) >= self.agent_config.max_total_sources:
                 break
 
@@ -109,6 +127,7 @@ class DeepResearchAgent:
 
             # Extract key facts from results
             for r in results:
+                self._check_cancelled()
                 if r.url in seen_urls:
                     continue
                 seen_urls.add(r.url)
@@ -137,6 +156,7 @@ class DeepResearchAgent:
             memory.add_research_notes(session_id, all_notes)
 
         # --- Step 3: Synthesizing ---
+        self._check_cancelled()
         yield ResearchStep("synthesizing", "正在综合分析所有资料，生成研究报告...")
 
         # Build research context for synthesis
@@ -160,6 +180,7 @@ class DeepResearchAgent:
         # Stream the final report
         report_chunks: list[str] = []
         for chunk in llm_client.stream(synthesis_messages, temperature=0.4):
+            self._check_cancelled()
             report_chunks.append(chunk)
             yield ResearchStep("synthesizing", chunk, {"streaming": True})
 
@@ -212,16 +233,25 @@ class DeepResearchAgent:
 
         return "\n".join(lines)
 
-    def chat(self, query: str, session_id: str) -> Iterator[ResearchStep]:
-        """Decide whether to do deep research or simple chat, then respond."""
-        # Heuristic: if the query asks for research/info/search, do deep research
-        research_keywords = [
-            "搜索", "查找", "调研", "研究", "了解", "分析", "总结",
-            "最新", "什么是", "怎么样", "如何", "为什么", "有哪些",
-            "search", "research", "find", "analyze",
-        ]
+    def chat(self, query: str, session_id: str, *, mode: str = "auto") -> Iterator[ResearchStep]:
+        """Decide whether to do deep research or simple chat, then respond.
 
-        needs_research = any(kw in query.lower() for kw in research_keywords) or len(query) > 20
+        Args:
+            mode: "auto" (keyword heuristic), "research" (force research),
+                  "chat" (force simple chat)
+        """
+        if mode == "research":
+            needs_research = True
+        elif mode == "chat":
+            needs_research = False
+        else:
+            # Heuristic: if the query asks for research/info/search, do deep research
+            research_keywords = [
+                "搜索", "查找", "调研", "研究", "了解", "分析", "总结",
+                "最新", "什么是", "怎么样", "如何", "为什么", "有哪些",
+                "search", "research", "find", "analyze",
+            ]
+            needs_research = any(kw in query.lower() for kw in research_keywords) or len(query) > 20
 
         if needs_research:
             yield from self.research(query, session_id)
