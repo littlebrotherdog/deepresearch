@@ -4,6 +4,7 @@ from __future__ import annotations
 import logging
 import re
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, asdict
 from urllib.parse import quote, urljoin
 
@@ -333,7 +334,7 @@ def search_arxiv(query: str, config: SearchConfig | None = None) -> list[SearchR
 # Multi-engine search
 # ---------------------------------------------------------------------------
 def search_multi(query: str, config: SearchConfig | None = None) -> list[SearchResult]:
-    """Search across multiple engines and merge deduplicated results."""
+    """Search across multiple engines in parallel and merge deduplicated results."""
     if config is None:
         config = SearchConfig()
 
@@ -347,21 +348,33 @@ def search_multi(query: str, config: SearchConfig | None = None) -> list[SearchR
         "arxiv": search_arxiv,
     }
 
+    # Collect valid engines
+    tasks: list[tuple[str, callable]] = []
     for engine_name in config.engines:
         engine_name = engine_name.strip().lower()
         search_fn = engine_map.get(engine_name)
         if not search_fn:
             logger.warning(f"Unknown search engine: {engine_name}")
             continue
-        try:
-            logger.info(f"Searching {engine_name} for '{query}'")
-            results = search_fn(query, config)
-            for r in results:
-                if r.url and r.url not in seen_urls:
-                    seen_urls.add(r.url)
-                    all_results.append(r)
-        except Exception as e:
-            logger.warning(f"{engine_name} search failed for '{query}': {e}")
+        tasks.append((engine_name, search_fn))
+
+    # Parallel execution across engines
+    with ThreadPoolExecutor(max_workers=len(tasks) or 1) as pool:
+        future_to_name = {
+            pool.submit(fn, query, config): name
+            for name, fn in tasks
+        }
+        for future in as_completed(future_to_name):
+            engine_name = future_to_name[future]
+            try:
+                results = future.result()
+                logger.info(f"{engine_name} returned {len(results)} results for '{query}'")
+                for r in results:
+                    if r.url and r.url not in seen_urls:
+                        seen_urls.add(r.url)
+                        all_results.append(r)
+            except Exception as e:
+                logger.warning(f"{engine_name} search failed for '{query}': {e}")
 
     return all_results
 
