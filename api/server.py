@@ -228,19 +228,26 @@ async def eval_get_cases(eval_id: str, subject: str = "", model: str = "", offse
             by_question[qid] = []
         by_question[qid].append(r)
 
-    # Load question text from dataset
-    question_texts: dict[str, str] = {}
+    # Load question text + choices from dataset (stored results omit question body)
+    qmap: dict[str, dict] = {}
     try:
         questions = load_dataset(run.dataset_name, subjects=[subject] if subject else None)
-        question_texts = {q.question_id: q.question for q in questions}
+        qmap = {q.question_id: {
+            "question": q.question,
+            "choices": list(q.choices or []),
+            "answer_type": q.answer_type,
+        } for q in questions}
     except Exception:
         pass
 
     cases = []
     for qid, answers in sorted(by_question.items()):
+        info = qmap.get(qid, {})
         cases.append({
             "question_id": qid,
-            "question": question_texts.get(qid, ""),
+            "question": info.get("question", ""),
+            "choices": info.get("choices", []),
+            "answer_type": info.get("answer_type", ""),
             "subject": answers[0].get("subject", "") if answers else "",
             "correct_answer": answers[0].get("correct_answer", "") if answers else "",
             "answers": answers,

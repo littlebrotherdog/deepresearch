@@ -31,4 +31,13 @@ echo "  Model:   $DR_MODEL_NAME"
 echo "============================================"
 echo ""
 
+# --- Subcommand: one-time dataset preparation for the eval/benchmark UI ---
+# The downloader defaults to the hf-mirror.com community mirror (set inside the
+# script). Export a different HF_ENDPOINT to use another source.
+if [ "${1:-}" = "prepare" ]; then
+  echo "[prepare] Fetching benchmark datasets via ${HF_ENDPOINT:-hf-mirror.com} ..."
+  "$PYTHON" scripts/download_datasets.py "${2:-all}"
+  exit $?
+fi
+
 exec "$PYTHON" -m api.server

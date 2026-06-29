@@ -33,6 +33,9 @@ class ModelAnswer:
     is_correct: bool
     latency_ms: float
 
+    def to_dict(self) -> dict:
+        return asdict(self)
+
 
 @dataclass
 class EvalRun:

@@ -401,6 +401,22 @@ body{
 .ecd-model{font-size:11px;font-weight:600;color:var(--text-2);margin-bottom:4px}
 .ecd-extracted{font-size:12px;margin-bottom:4px}
 .ecd-raw{font-size:11px;color:var(--text-3);max-height:80px;overflow-y:auto}
+/* Case 详情里的 A/B/C/D 选项 */
+.ecd-question-text{font-size:13px;color:var(--text);line-height:1.55;margin-bottom:10px;white-space:pre-wrap}
+.ecd-options{display:flex;flex-direction:column;gap:5px;margin:0 0 12px}
+.ecd-option{font-size:12.5px;color:var(--text);padding:6px 11px;background:var(--panel);border:1px solid var(--border);border-left-width:3px;border-radius:7px;line-height:1.45}
+.ecd-option.opt-correct{background:rgba(52,211,153,.16);border-color:var(--ok);color:var(--ok);font-weight:600}
+.ecd-no-choice{font-size:11px;color:var(--text-3);margin:0 0 12px}
+/* 发起评测：学科选择器工具栏 + 搜索框 */
+.subj-toolbar{display:flex;align-items:center;gap:14px;margin-bottom:8px;font-size:11.5px;color:var(--text-3)}
+.subj-toolbar .subj-tip{flex:1}
+.subj-tool{cursor:pointer;color:var(--accent);user-select:none}
+.subj-tool:hover{text-decoration:underline}
+.eval-subject-search{width:100%;box-sizing:border-box;margin-bottom:8px;background:rgba(0,0,0,.25);border:1px solid var(--border);border-radius:9px;padding:7px 11px;color:var(--text);font-size:12px;font-family:inherit}
+.eval-subject-search:focus{outline:none;border-color:rgba(124,140,255,.5)}
+/* 结果页 Case 区按学科筛选 */
+.case-filter-row{display:flex;align-items:center;gap:10px;margin-bottom:12px;font-size:12px;color:var(--text-2)}
+.case-filter-row select{min-width:220px;background:var(--panel-strong);border:1px solid var(--border);border-radius:9px;padding:7px 10px;color:var(--text);font-size:12px;font-family:inherit}
 
 @media print{
     #sidebar,.chat-header,.input-bar,.msg-actions,.research-card,.mem-chip,.msg-action-btn{display:none!important}
@@ -504,7 +520,14 @@ body{
                     <select id="eval-dataset"><option value="">加载数据集...</option></select>
                 </div>
                 <div class="eval-field">
-                    <label>学科筛选 <span style="font-weight:400;color:var(--text-3)">（点击选择，可多选）</span></label>
+                    <label>学科筛选 <span style="font-weight:400;color:var(--text-3)">（不勾选任何学科 = 跑全部）</span></label>
+                    <input type="text" id="eval-subject-search" class="eval-subject-search" placeholder="输入关键字定位学科…" style="display:none">
+                    <div id="subj-toolbar" class="subj-toolbar" style="display:none">
+                        <span class="subj-tip"></span>
+                        <span class="subj-tool" data-act="all">全选</span>
+                        <span class="subj-tool" data-act="none">清空</span>
+                        <span class="subj-tool" data-act="invert">反选</span>
+                    </div>
                     <div id="eval-subjects" class="subject-chips"></div>
                 </div>
                 <div class="eval-field">
@@ -537,6 +560,11 @@ body{
                 </div>
                 <div class="eval-cases">
                     <h3>Case 分析 <span style="font-weight:400;font-size:12px;color:var(--text-3)">（点击展开详情）</span></h3>
+                    <div id="case-filter-row" class="case-filter-row" style="display:none">
+                        <span>按学科筛选：</span>
+                        <select id="eval-case-subject-filter"><option value="">全部学科（本评测范围）</option></select>
+                        <span style="font-size:11px;color:var(--text-3)" id="eval-case-count"></span>
+                    </div>
                     <div id="eval-cases-list"></div>
                 </div>
             </div>
@@ -1349,7 +1377,17 @@ document.addEventListener('DOMContentLoaded',()=>{
             document.getElementById('research-panel').classList.toggle('active',tab==='research');
             document.getElementById('eval-panel').classList.toggle('active',tab==='eval');
             document.getElementById('new-session-btn').style.display=tab==='research'?'':'none';
-            if(tab==='eval'){evalLoadDatasets();evalLoadRuns();}
+            if(tab==='eval'){
+                evalLoadDatasets();evalLoadRuns();
+                // 回到评测页时,若无进行中的任务则复位至配置主页;
+                // 否则会一直困在上次遗留的"进度/已完成"子视图,点不回主页
+                if(!evalRunning){
+                    document.getElementById('eval-setup').style.display='block';
+                    document.getElementById('eval-progress').style.display='none';
+                    document.getElementById('eval-results').style.display='none';
+                    evalCurrentId=null;
+                }
+            }
         };
     });
 });
@@ -1373,35 +1411,63 @@ function evalLoadDatasets(){
             o.dataset.subjects=JSON.stringify(ds.subjects||[]);
             sel.appendChild(o);
         });
-        sel.onchange=()=>{
-            const opt=sel.selectedOptions[0];
-            if(!opt)return;
-            const subjects=JSON.parse(opt.dataset.subjects||'[]');
-            const container=document.getElementById('eval-subjects');
-            container.innerHTML='';
-            if(!subjects.length){container.innerHTML='<span style="font-size:12px;color:var(--text-3)">全部学科</span>';return;}
-            // Add "全选" toggle
-            const allChip=document.createElement('span');
-            allChip.className='subject-chip active';
-            allChip.textContent='全选';
-            allChip.onclick=()=>{
-                const active=allChip.classList.contains('active');
-                allChip.classList.toggle('active',!active);
-                container.querySelectorAll('.subject-chip:not(:first-child)').forEach(c=>c.classList.toggle('active',!active));
-            };
-            container.appendChild(allChip);
-            subjects.forEach(s=>{
-                const chip=document.createElement('span');
-                chip.className='subject-chip active';
-                chip.textContent=s;
-                chip.dataset.subject=s;
-                chip.onclick=()=>{chip.classList.toggle('active');};
-                container.appendChild(chip);
-            });
-        };
+        sel.onchange=()=>renderEvalSubjects(JSON.parse(sel.selectedOptions[0]?.dataset.subjects||'[]'));
         if(sel.options.length)sel.onchange();
         evalUpdateStartBtn();
     }).catch(()=>{});
+}
+
+// 渲染数据集对应的学科芯片列表
+function renderEvalSubjects(subjects){
+    const container=document.getElementById('eval-subjects');
+    const search=document.getElementById('eval-subject-search');
+    const bar=document.getElementById('subj-toolbar');
+    container.innerHTML='';
+    if(!subjects.length){
+        search.style.display='none';bar.style.display='none';
+        container.innerHTML='<span style="font-size:12px;color:var(--text-3)">该数据集不区分学科 · 将评测全部题目</span>';
+        return;
+    }
+    search.style.display='block';bar.style.display='flex';
+
+    // 工具栏 & 搜索框只绑定一次事件
+    if(!bar.dataset.bound){
+        bar.addEventListener('click',e=>{
+            const t=e.target.closest('.subj-tool');if(!t)return;
+            const act=t.dataset.act;
+            const specs=[...container.querySelectorAll('.subject-chip[data-subject]')];
+            if(act==='all')specs.forEach(c=>c.classList.add('active'));
+            else if(act==='none')specs.forEach(c=>c.classList.remove('active'));
+            else if(act==='invert')specs.forEach(c=>c.classList.toggle('active'));
+            syncSubjTools();evalUpdateStartBtn();
+        });
+        search.addEventListener('input',()=>{
+            const kw=search.value.trim().toLowerCase();
+            [...container.children].forEach(c=>{
+                c.style.display=c.textContent.toLowerCase().includes(kw)?'':'none';
+            });
+        });
+        bar.dataset.bound='1';
+    }
+
+    subjects.forEach(s=>{
+        const chip=document.createElement('span');
+        chip.className='subject-chip';          // 默认不激活：空集 == 全部
+        chip.textContent=s;chip.dataset.subject=s;
+        chip.onclick=()=>{chip.classList.toggle('active');syncSubjTools();evalUpdateStartBtn();};
+        container.appendChild(chip);
+    });
+    syncSubjTools();
+}
+
+// 根据当前激活情况更新工具栏文案
+function syncSubjTools(){
+    const bar=document.getElementById('subj-toolbar');
+    const specs=[...document.querySelectorAll('#eval-subjects .subject-chip[data-subject]')];
+    const n=specs.filter(c=>c.classList.contains('active')).length;
+    const tot=specs.length;
+    bar.querySelector('[data-act="all"]').textContent=(n===tot&&tot>0)?'取消全选':'全选';
+    bar.querySelector('.subj-tip').textContent=n===0?'当前：全部学科':`已选 ${n} 个学科`;
 }
 
 function evalAddModel(){
@@ -1431,13 +1497,9 @@ function evalUpdateStartBtn(){
 }
 
 function evalGetSelectedSubjects(){
-    const chips=document.querySelectorAll('#eval-subjects .subject-chip.active');
-    const subjects=[];
-    chips.forEach(c=>{if(c.dataset.subject)subjects.push(c.dataset.subject);});
-    // If "全选" is active or no specific chips, return empty (=all)
-    const allChip=document.querySelector('#eval-subjects .subject-chip:first-child');
-    if(allChip&&allChip.classList.contains('active')&&subjects.length===0)return[];
-    return subjects;
+    // 未勾选任何具体学科 => 返回 []，由 runner 解释为“全部”
+    return Array.from(document.querySelectorAll('#eval-subjects .subject-chip.active[data-subject]'))
+        .map(c=>c.dataset.subject).filter(Boolean);
 }
 
 function evalStart(){
@@ -1558,37 +1620,68 @@ function evalShowResults(summary){
     tblHtml+='</tbody>';
     document.getElementById('eval-subject-table').innerHTML=tblHtml;
 
+    // 学科筛选下拉：候选取自本 run 真实跑到的学科
+    const filtRow=document.getElementById('case-filter-row');
+    const filtSel=document.getElementById('eval-case-subject-filter');
+    if(filtSel){
+        filtSel.innerHTML='<option value="">全部学科（本评测范围）</option>';
+        subjects.forEach(s=>{const o=document.createElement('option');o.value=s;o.textContent=s;filtSel.appendChild(o);});
+        if(!filtSel.dataset.bound){filtSel.addEventListener('change',()=>evalLoadCases());filtSel.dataset.bound='1';}
+        else{filtSel.value='';}                       // 切换不同 run 时复位到“全部”
+        filtRow.style.display=(subjects.length>1)?'flex':'none';
+    }
+
     // Load cases
     evalLoadCases();
 }
 
+let evalCaseSubjectFilter='';
 function evalLoadCases(){
     if(!evalCurrentId)return;
-    fetch(`/api/eval/runs/${evalCurrentId}/cases?limit=100`).then(r=>r.json()).then(data=>{
+    const subj=encodeURIComponent(document.getElementById('eval-case-subject-filter')?.value||'');
+    const countEl=document.getElementById('eval-case-count');
+    if(countEl)countEl.textContent='加载中...';
+    fetch(`/api/eval/runs/${evalCurrentId}/cases?limit=200${subj?('&subject='+subj):''}`).then(r=>r.json()).then(data=>{
+        const cases=data.cases||[];
         const list=document.getElementById('eval-cases-list');
         list.innerHTML='';
-        (data.cases||[]).forEach(c=>{
+        if(countEl)countEl.textContent=`共 ${data.total??cases.length} 题`;
+        if(!cases.length){list.innerHTML='<div style="text-align:center;color:var(--text-3);font-size:12px;padding:16px">无匹配题目</div>';return;}
+        cases.forEach(c=>{
             const item=document.createElement('div');
             item.className='eval-case-item';
             const badges=(c.answers||[]).map(a=>
-                `<span class="ecq-badge ${a.is_correct?'correct':'wrong'}">${a.model_name}: ${a.extracted_answer||'?'} ${a.is_correct?'✓':'✗'}</span>`
+                `<span class="ecq-badge ${a.is_correct?'correct':'wrong'}">${escapeHtml(a.model_name)}: ${escapeHtml(a.extracted_answer)||'?'} ${a.is_correct?'✓':'✗'}</span>`
             ).join('');
+            // 选项：MC 题画 A/B/C/D 并高亮正确项；数值题给占位提示
+            let optsHtml;
+            if(Array.isArray(c.choices)&&c.choices.length){
+                optsHtml=`<div class="ecd-options">${c.choices.map(ch=>{
+                    const letter=(String(ch).trim().match(/^[A-D]/)||[''])[0];
+                    const ok=letter&&letter===String(c.correct_answer||'').trim().toUpperCase();
+                    return `<div class="ecd-option ${ok?'opt-correct':''}">${escapeHtml(ch)}</div>`;
+                }).join('')}</div>`;
+            }else{
+                optsHtml='<div class="ecd-no-choice">（数值题型，无固定选项）</div>';
+            }
             item.innerHTML=`<div class="eval-case-q" onclick="this.parentElement.classList.toggle('expanded')">
-                <span class="ecq-subject">${c.subject}</span>
-                <span class="ecq-text">${c.question||c.question_id}</span>
+                <span class="ecq-subject">${escapeHtml(c.subject)}</span>
+                <span class="ecq-text">${escapeHtml(c.question)||escapeHtml(c.question_id)}</span>
                 <span class="ecq-badges">${badges}</span>
             </div>
             <div class="eval-case-detail">
-                <div style="font-size:11px;color:var(--text-3);margin-bottom:8px">正确答案: <strong style="color:var(--accent)">${c.correct_answer}</strong></div>
+                <div class="ecd-question-text">${escapeHtml(c.question)||'(题干缺失)'}</div>
+                ${optsHtml}
+                <div style="font-size:11px;color:var(--text-3);margin-bottom:8px">正确答案: <strong style="color:var(--accent)">${escapeHtml(c.correct_answer)}</strong></div>
                 ${(c.answers||[]).map(a=>`<div class="ecd-answer ${a.is_correct?'ecd-correct':'ecd-wrong'}">
-                    <div class="ecd-model">${a.model_name} — ${a.is_correct?'<span style="color:var(--ok)">正确</span>':'<span style="color:var(--err)">错误</span>'} — ${Math.round(a.latency_ms)}ms</div>
-                    <div class="ecd-extracted">回答: <strong>${a.extracted_answer||'(未解析)'}</strong></div>
+                    <div class="ecd-model">${escapeHtml(a.model_name)} — ${a.is_correct?'<span style="color:var(--ok)">正确</span>':'<span style="color:var(--err)">错误</span>'} — ${Math.round(a.latency_ms)}ms</div>
+                    <div class="ecd-extracted">回答: <strong>${escapeHtml(a.extracted_answer)||'(未解析)'}</strong></div>
                     <div class="ecd-raw">${escapeHtml(a.raw_response||'')}</div>
                 </div>`).join('')}
             </div>`;
             list.appendChild(item);
         });
-    }).catch(()=>{});
+    }).catch(()=>{if(countEl)countEl.textContent='';});
 }
 
 function evalLoadRuns(){
@@ -1625,6 +1718,6 @@ function evalLoadRuns(){
     }).catch(()=>{});
 }
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" crossorigin="anonymous"></script>
+<script src="/static/vendor/html2pdf.bundle.min.js"></script>
 </body>
 </html>

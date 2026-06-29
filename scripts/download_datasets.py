@@ -8,6 +8,7 @@ Usage:
 Saves to data/datasets/{name}/test.jsonl + meta.json
 """
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -17,83 +18,133 @@ sys.path.insert(0, str(ROOT))
 
 DATASETS_DIR = ROOT / "data" / "datasets"
 
+# Default to the community mirror so downloads work where huggingface.co is
+# blocked (e.g. mainland China). Override by exporting HF_ENDPOINT yourself.
+os.environ.setdefault("HF_ENDPOINT", "https://hf-mirror.com")
+
+
 
 def download_ceval():
-    """Download C-Eval (Chinese, 52 subjects, multiple-choice)."""
-    from datasets import load_dataset
+    """Download C-Eval (Chinese, 52 subjects, multiple-choice).
+
+    Upstream exposes one config *per subject* (there is no ``'all'`` combined
+    config), so enumerate every subject's labelled validation split.
+    """
+    from datasets import load_dataset, get_dataset_config_names
 
     print("Downloading C-Eval...")
     ds_dir = DATASETS_DIR / "ceval"
     ds_dir.mkdir(parents=True, exist_ok=True)
 
-    all_questions = []
-    subjects = set()
-
-    # C-Eval has per-subject configs
-    # Load the "all" config which combines everything
+    repo_id = "ceval/ceval-exam"
     try:
-        ds = load_dataset("ceval/ceval-exam", "all", split="test", trust_remote_code=True)
-    except Exception:
-        # Fallback: load validation split if test has no answers
-        ds = load_dataset("ceval/ceval-exam", "all", split="val", trust_remote_code=True)
+        # NOTE: ``trust_remote_code`` was removed in datasets>=2.x's later
+        # releases and is unsupported on >=4.x; the repo ships standard splits.
+        configs = get_dataset_config_names(repo_id)
+    except Exception as e:
+        raise RuntimeError(f"Failed to list C-Eval configs: {e}")
+    configs = [c for c in configs if c and c != "default"] or ["all"]
 
-    for i, row in enumerate(ds):
-        subj = row.get("subject", "unknown")
-        subjects.add(subj)
-        question = row.get("question", "")
-        a = row.get("A", "")
-        b = row.get("B", "")
-        c = row.get("C", "")
-        d = row.get("D", "")
-        answer = row.get("answer", "")
+    all_questions = []
+    for ci, subj in enumerate(configs):
+        ds = None
+        last_err = None
+        # Answers live in val/dev; the 'test' split is unlabelled.
+        for split in ("val", "dev"):
+            try:
+                ds = load_dataset(
+                    repo_id, subj, split=split,
+                    verification_mode="no_checks",
+                )
+                break
+            except Exception as e:
+                last_err = e
+                continue
+        if ds is None:
+            print(f"  skip '{subj}' ({last_err})")
+            continue
 
-        all_questions.append({
-            "question_id": f"ceval_{i}",
-            "subject": subj,
-            "question": question,
-            "choices": [f"A. {a}", f"B. {b}", f"C. {c}", f"D. {d}"],
-            "answer": answer.upper() if answer else "",
-            "answer_type": "mc",
-        })
+        for i, r in enumerate(ds):
+            ans = r.get("answer", "")
+            all_questions.append({
+                "question_id": f"ceval_{subj}_{i}",
+                "subject": subj,
+                "question": r.get("question", ""),
+                "choices": [
+                    f"A. {r.get('A', '')}", f"B. {r.get('B', '')}",
+                    f"C. {r.get('C', '')}", f"D. {r.get('D', '')}",
+                ],
+                "answer": ans.upper() if isinstance(ans, str) else "",
+                "answer_type": "mc",
+            })
 
-    _save_dataset(ds_dir, all_questions, sorted(subjects))
-    print(f"  C-Eval: {len(all_questions)} questions, {len(subjects)} subjects")
+        if (ci + 1) % 10 == 0 or ci + 1 == len(configs):
+            print(f"  loaded {ci + 1}/{len(configs)} subjects "
+                  f"({len(all_questions)} questions)")
+
+    _save_dataset(ds_dir, all_questions, sorted({q['subject'] for q in all_questions}))
+    print(f"  C-Eval: {len(all_questions)} questions, {len(set(q['subject'] for q in all_questions))} subjects")
 
 
 def download_cmmlu():
-    """Download CMMLU (Chinese, 67 subjects, multiple-choice)."""
-    from datasets import load_dataset
+    """Download CMMLU by fetching the raw archive directly.
+
+    The ``lmlmcat/cmmlu`` repo ships only an old-style loading script plus the
+    bundled ``cmmlu_v1_0_1.zip``. Newer ``datasets`` versions no longer execute
+    dataset scripts at all, so we bypass ``load_dataset`` and parse the zipped
+    per-subject CSV files ourselves.
+    """
+    import csv
+    import io
+    import zipfile
+    from huggingface_hub import hf_hub_download
 
     print("Downloading CMMLU...")
     ds_dir = DATASETS_DIR / "cmmlu"
     ds_dir.mkdir(parents=True, exist_ok=True)
 
+    repo_id, filename = "lmlmcat/cmmlu", "cmmlu_v1_0_1.zip"
+    try:
+        zpath = hf_hub_download(repo_id, filename, repo_type="dataset")
+    except Exception as e:
+        raise RuntimeError(f"Failed to fetch {repo_id}/{filename}: {e}")
+
     all_questions = []
     subjects = set()
-
-    try:
-        ds = load_dataset("lmlmcat/cmmlu", split="test", trust_remote_code=True)
-    except Exception:
-        ds = load_dataset("lmlmcat/cmmlu", split="validation", trust_remote_code=True)
-
-    for i, row in enumerate(ds):
-        subj = row.get("subject", "unknown")
-        subjects.add(subj)
-        question = row.get("question", "")
-        a = row.get("A", "")
-        b = row.get("B", "")
-        c = row.get("C", "")
-        d = row.get("D", "")
-        answer = row.get("answer", "")
-
-        all_questions.append({
-            "question_id": f"cmmlu_{i}",
-            "subject": subj,
-            "question": question,
-            "choices": [f"A. {a}", f"B. {b}", f"C. {c}", f"D. {d}"],
-            "answer": answer.upper() if answer else "",
-            "answer_type": "mc",
-        })
+    with zipfile.ZipFile(zpath) as zf:
+        members = [
+            n for n in zf.namelist()
+            if n.lower().endswith(".csv")
+            and (n.lower().startswith("test/") or "test\\" in n.lower())
+        ]
+        for member in sorted(members):
+            subj = Path(member).stem
+            subjects.add(subj)
+            raw = zf.read(member)
+            text = None
+            for enc in ("utf-8-sig", "gb18030"):  # tolerate either encoding
+                try:
+                    text = raw.decode(enc)
+                    break
+                except UnicodeDecodeError:
+                    continue
+            if not text:
+                continue
+            reader = csv.DictReader(io.StringIO(text))
+            for i, r in enumerate(reader):
+                q = (r.get("Question") or "").strip()
+                if not q:
+                    continue
+                a, b, c, d = [(r.get(k) or "") for k in ("A", "B", "C", "D")]
+                ans = (r.get("Answer") or "").strip().upper()
+                all_questions.append({
+                    "question_id": f"cmmlu_{subj}_{i}",
+                    "subject": subj,
+                    "question": q,
+                    "choices": [f"A. {a}", f"B. {b}", f"C. {c}", f"D. {d}"],
+                    "answer": ans,
+                    "answer_type": "mc",
+                })
 
     _save_dataset(ds_dir, all_questions, sorted(subjects))
     print(f"  CMMLU: {len(all_questions)} questions, {len(subjects)} subjects")
@@ -110,7 +161,7 @@ def download_mmlu():
     all_questions = []
     subjects = set()
 
-    ds = load_dataset("cais/mmlu", "all", split="test", trust_remote_code=True)
+    ds = load_dataset("cais/mmlu", "all", split="test")
 
     for i, row in enumerate(ds):
         subj = row.get("subject", "unknown")
@@ -148,14 +199,15 @@ def download_cmath():
     subjects = set()
 
     try:
-        ds = load_dataset("weitianwen/cmath", split="test", trust_remote_code=True)
+        ds = load_dataset("weitianwen/cmath", split="test")
     except Exception:
-        ds = load_dataset("weitianwen/cmath", split="validation", trust_remote_code=True)
+        ds = load_dataset("weitianwen/cmath", split="validation")
 
     for i, row in enumerate(ds):
-        # CMATH fields vary; try common patterns
+        # CMATH fields vary; the real schema exposes the ground-truth number as
+        # ``golden``. Fall back to common names defensively.
         question = row.get("question", row.get("problem", ""))
-        answer = str(row.get("answer", row.get("solution", "")))
+        answer = str(row.get("golden") or row.get("answer") or row.get("solution") or "")
         grade = row.get("grade", "unknown")
         subjects.add(f"grade_{grade}")
 
