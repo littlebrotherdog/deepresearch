@@ -1,0 +1,363 @@
+{
+  "id": "d978a99c0555",
+  "dataset_name": "ceval",
+  "models": [
+    {
+      "model_name": "claude-opus-4-6",
+      "base_url": "",
+      "api_key": ""
+    },
+    {
+      "model_name": "claude-opus-4-7",
+      "base_url": "",
+      "api_key": ""
+    },
+    {
+      "model_name": "claude-opus-4-8",
+      "base_url": "",
+      "api_key": ""
+    }
+  ],
+  "subject_filter": [],
+  "num_questions": 10,
+  "status": "completed",
+  "created_at": 1782722740.8063009,
+  "completed_at": 1782722767.306419,
+  "results": [
+    {
+      "model_name": "claude-opus-4-7",
+      "question_id": "ceval_accountant_0",
+      "subject": "accountant",
+      "correct_answer": "D",
+      "raw_response": "D",
+      "extracted_answer": "D",
+      "is_correct": true,
+      "latency_ms": 1374.7
+    },
+    {
+      "model_name": "claude-opus-4-7",
+      "question_id": "ceval_accountant_1",
+      "subject": "accountant",
+      "correct_answer": "C",
+      "raw_response": "C",
+      "extracted_answer": "C",
+      "is_correct": true,
+      "latency_ms": 1312.9
+    },
+    {
+      "model_name": "claude-opus-4-7",
+      "question_id": "ceval_accountant_2",
+      "subject": "accountant",
+      "correct_answer": "D",
+      "raw_response": "D",
+      "extracted_answer": "D",
+      "is_correct": true,
+      "latency_ms": 1335.2
+    },
+    {
+      "model_name": "claude-opus-4-7",
+      "question_id": "ceval_accountant_3",
+      "subject": "accountant",
+      "correct_answer": "A",
+      "raw_response": "A",
+      "extracted_answer": "A",
+      "is_correct": true,
+      "latency_ms": 1337.6
+    },
+    {
+      "model_name": "claude-opus-4-7",
+      "question_id": "ceval_accountant_4",
+      "subject": "accountant",
+      "correct_answer": "C",
+      "raw_response": "C",
+      "extracted_answer": "C",
+      "is_correct": true,
+      "latency_ms": 2443.4
+    },
+    {
+      "model_name": "claude-opus-4-7",
+      "question_id": "ceval_accountant_5",
+      "subject": "accountant",
+      "correct_answer": "A",
+      "raw_response": "A",
+      "extracted_answer": "A",
+      "is_correct": true,
+      "latency_ms": 5841.3
+    },
+    {
+      "model_name": "claude-opus-4-7",
+      "question_id": "ceval_accountant_6",
+      "subject": "accountant",
+      "correct_answer": "C",
+      "raw_response": "C",
+      "extracted_answer": "C",
+      "is_correct": true,
+      "latency_ms": 1501.5
+    },
+    {
+      "model_name": "claude-opus-4-7",
+      "question_id": "ceval_accountant_7",
+      "subject": "accountant",
+      "correct_answer": "C",
+      "raw_response": "分析：\n\n年初土地2万平方米，其中：\n- 托儿所占地0.1万平方米：免税\n- 无偿提供给公安局使用0.3万平方米：免税\n- 绿化用地0.4万平方米：需纳税（厂区内绿化用地照章纳税）\n\n年初应税面积 = 2 - 0.1 - 0.3 = 1.6万平方米\n\n5月购买土地2.4万平方米，合同约定5月交付，从6月起缴纳，缴纳7个月。\n\n全年税额：\n- 原有：1.6 × 10 = 16万元\n- 新购：2.4 × 10 × 7/12 = 14万元\n\n合计 = 16 + 14 = 30万元\n\nC",
+      "extracted_answer": "C",
+      "is_correct": true,
+      "latency_ms": 4007.4
+    },
+    {
+      "model_name": "claude-opus-4-7",
+      "question_id": "ceval_accountant_8",
+      "subject": "accountant",
+      "correct_answer": "B",
+      "raw_response": "B",
+      "extracted_answer": "B",
+      "is_correct": true,
+      "latency_ms": 1775.8
+    },
+    {
+      "model_name": "claude-opus-4-7",
+      "question_id": "ceval_accountant_9",
+      "subject": "accountant",
+      "correct_answer": "C",
+      "raw_response": "C",
+      "extracted_answer": "C",
+      "is_correct": true,
+      "latency_ms": 1192.9
+    },
+    {
+      "model_name": "claude-opus-4-8",
+      "question_id": "ceval_accountant_0",
+      "subject": "accountant",
+      "correct_answer": "D",
+      "raw_response": "D",
+      "extracted_answer": "D",
+      "is_correct": true,
+      "latency_ms": 1721.8
+    },
+    {
+      "model_name": "claude-opus-4-8",
+      "question_id": "ceval_accountant_1",
+      "subject": "accountant",
+      "correct_answer": "C",
+      "raw_response": "C",
+      "extracted_answer": "C",
+      "is_correct": true,
+      "latency_ms": 1257.9
+    },
+    {
+      "model_name": "claude-opus-4-8",
+      "question_id": "ceval_accountant_2",
+      "subject": "accountant",
+      "correct_answer": "D",
+      "raw_response": "D",
+      "extracted_answer": "D",
+      "is_correct": true,
+      "latency_ms": 8134.9
+    },
+    {
+      "model_name": "claude-opus-4-8",
+      "question_id": "ceval_accountant_3",
+      "subject": "accountant",
+      "correct_answer": "A",
+      "raw_response": "A",
+      "extracted_answer": "A",
+      "is_correct": true,
+      "latency_ms": 2713.6
+    },
+    {
+      "model_name": "claude-opus-4-8",
+      "question_id": "ceval_accountant_4",
+      "subject": "accountant",
+      "correct_answer": "C",
+      "raw_response": "C",
+      "extracted_answer": "C",
+      "is_correct": true,
+      "latency_ms": 1252.8
+    },
+    {
+      "model_name": "claude-opus-4-8",
+      "question_id": "ceval_accountant_5",
+      "subject": "accountant",
+      "correct_answer": "A",
+      "raw_response": "A",
+      "extracted_answer": "A",
+      "is_correct": true,
+      "latency_ms": 2453.9
+    },
+    {
+      "model_name": "claude-opus-4-8",
+      "question_id": "ceval_accountant_6",
+      "subject": "accountant",
+      "correct_answer": "C",
+      "raw_response": "C",
+      "extracted_answer": "C",
+      "is_correct": true,
+      "latency_ms": 1259.3
+    },
+    {
+      "model_name": "claude-opus-4-8",
+      "question_id": "ceval_accountant_7",
+      "subject": "accountant",
+      "correct_answer": "C",
+      "raw_response": "B",
+      "extracted_answer": "B",
+      "is_correct": false,
+      "latency_ms": 1547.5
+    },
+    {
+      "model_name": "claude-opus-4-8",
+      "question_id": "ceval_accountant_8",
+      "subject": "accountant",
+      "correct_answer": "B",
+      "raw_response": "B",
+      "extracted_answer": "B",
+      "is_correct": true,
+      "latency_ms": 1158.5
+    },
+    {
+      "model_name": "claude-opus-4-8",
+      "question_id": "ceval_accountant_9",
+      "subject": "accountant",
+      "correct_answer": "C",
+      "raw_response": "C",
+      "extracted_answer": "C",
+      "is_correct": true,
+      "latency_ms": 1125.4
+    },
+    {
+      "model_name": "claude-opus-4-6",
+      "question_id": "ceval_accountant_0",
+      "subject": "accountant",
+      "correct_answer": "D",
+      "raw_response": "D",
+      "extracted_answer": "D",
+      "is_correct": true,
+      "latency_ms": 1905.3
+    },
+    {
+      "model_name": "claude-opus-4-6",
+      "question_id": "ceval_accountant_1",
+      "subject": "accountant",
+      "correct_answer": "C",
+      "raw_response": "C",
+      "extracted_answer": "C",
+      "is_correct": true,
+      "latency_ms": 1712.5
+    },
+    {
+      "model_name": "claude-opus-4-6",
+      "question_id": "ceval_accountant_2",
+      "subject": "accountant",
+      "correct_answer": "D",
+      "raw_response": "D",
+      "extracted_answer": "D",
+      "is_correct": true,
+      "latency_ms": 1601.9
+    },
+    {
+      "model_name": "claude-opus-4-6",
+      "question_id": "ceval_accountant_3",
+      "subject": "accountant",
+      "correct_answer": "A",
+      "raw_response": "A",
+      "extracted_answer": "A",
+      "is_correct": true,
+      "latency_ms": 1667.4
+    },
+    {
+      "model_name": "claude-opus-4-6",
+      "question_id": "ceval_accountant_4",
+      "subject": "accountant",
+      "correct_answer": "C",
+      "raw_response": "C",
+      "extracted_answer": "C",
+      "is_correct": true,
+      "latency_ms": 1840.2
+    },
+    {
+      "model_name": "claude-opus-4-6",
+      "question_id": "ceval_accountant_5",
+      "subject": "accountant",
+      "correct_answer": "A",
+      "raw_response": "A",
+      "extracted_answer": "A",
+      "is_correct": true,
+      "latency_ms": 1743.0
+    },
+    {
+      "model_name": "claude-opus-4-6",
+      "question_id": "ceval_accountant_6",
+      "subject": "accountant",
+      "correct_answer": "C",
+      "raw_response": "C",
+      "extracted_answer": "C",
+      "is_correct": true,
+      "latency_ms": 1746.8
+    },
+    {
+      "model_name": "claude-opus-4-6",
+      "question_id": "ceval_accountant_7",
+      "subject": "accountant",
+      "correct_answer": "C",
+      "raw_response": "Let me calculate the urban land use tax for this enterprise in 2016.\n\n**Land owned at the beginning of 2016: 2万平方米**\n\nExemptions:\n- 托儿所占地 0.1万平方米: exempt (企业办的学校、医院、托儿所用地免税)\n- 无偿提供给公安局使用 0.3万平方米: exempt (免税单位无偿使用的土地免税)\n- 厂区内绿化用地 0.4万平方米: NOT exempt (厂区内绿化用地不免税)\n\nTaxable land from beginning of year: 2 - 0.1 - 0.3 = 1.6万平方米\n\nTax for this portion: 1.6 × 10 = 16万元 (for full year)\n\n**Land purchased in May:**\n- Area: 2.4万平方米\n- 非耕地, purchased and delivered in May\n- For non-耕地 (purchased land use rights), tax starts from the month following the month of delivery of the land (次月起)\n- Delivered in May, so tax starts from June\n- Months taxable: June through December = 7 months\n\nTax for purchased land: 2.4 × 10 × 7/12 = 14万元\n\n**Total tax: 16 + 14 = 30万元**\n\nWait, let me reconsider. For purchasing land use rights (购买土地使用权), the tax obligation starts from the month following contract delivery (合同约定交付土地时间的次月).\n\nContract specifies May delivery, so tax starts June. 7 months (June-December).\n\n2.4 × 10 × 7/12 = 14万元\n\nTotal: 16 + 14 = 30万元\n\nC",
+      "extracted_answer": "C",
+      "is_correct": true,
+      "latency_ms": 10239.1
+    },
+    {
+      "model_name": "claude-opus-4-6",
+      "question_id": "ceval_accountant_8",
+      "subject": "accountant",
+      "correct_answer": "B",
+      "raw_response": "B",
+      "extracted_answer": "B",
+      "is_correct": true,
+      "latency_ms": 2272.2
+    },
+    {
+      "model_name": "claude-opus-4-6",
+      "question_id": "ceval_accountant_9",
+      "subject": "accountant",
+      "correct_answer": "C",
+      "raw_response": "C",
+      "extracted_answer": "C",
+      "is_correct": true,
+      "latency_ms": 1762.3
+    }
+  ],
+  "summary": {
+    "claude-opus-4-6": {
+      "correct": 10,
+      "total": 10,
+      "accuracy": 1.0,
+      "by_subject": {
+        "accountant": {
+          "correct": 10,
+          "total": 10
+        }
+      }
+    },
+    "claude-opus-4-7": {
+      "correct": 10,
+      "total": 10,
+      "accuracy": 1.0,
+      "by_subject": {
+        "accountant": {
+          "correct": 10,
+          "total": 10
+        }
+      }
+    },
+    "claude-opus-4-8": {
+      "correct": 9,
+      "total": 10,
+      "accuracy": 0.9,
+      "by_subject": {
+        "accountant": {
+          "correct": 9,
+          "total": 10
+        }
+      }
+    }
+  }
+}

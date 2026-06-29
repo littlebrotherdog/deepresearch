@@ -1,0 +1,879 @@
+{
+  "id": "432b548522fc",
+  "dataset_name": "cmmlu",
+  "models": [
+    {
+      "model_name": "gemini-2.5-pro",
+      "base_url": "",
+      "api_key": ""
+    },
+    {
+      "model_name": "gpt-4o",
+      "base_url": "",
+      "api_key": ""
+    },
+    {
+      "model_name": "gpt-5.5",
+      "base_url": "",
+      "api_key": ""
+    },
+    {
+      "model_name": "gpt-5.4",
+      "base_url": "",
+      "api_key": ""
+    }
+  ],
+  "subject_filter": [],
+  "num_questions": 20,
+  "status": "completed",
+  "created_at": 1782722828.374515,
+  "completed_at": 1782722955.2932422,
+  "results": [
+    {
+      "model_name": "gpt-4o",
+      "question_id": "cmmlu_agronomy_0",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "B",
+      "extracted_answer": "B",
+      "is_correct": true,
+      "latency_ms": 902.9
+    },
+    {
+      "model_name": "gpt-4o",
+      "question_id": "cmmlu_agronomy_1",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "B",
+      "extracted_answer": "B",
+      "is_correct": true,
+      "latency_ms": 934.9
+    },
+    {
+      "model_name": "gpt-4o",
+      "question_id": "cmmlu_agronomy_2",
+      "subject": "agronomy",
+      "correct_answer": "C",
+      "raw_response": "C",
+      "extracted_answer": "C",
+      "is_correct": true,
+      "latency_ms": 851.7
+    },
+    {
+      "model_name": "gpt-4o",
+      "question_id": "cmmlu_agronomy_3",
+      "subject": "agronomy",
+      "correct_answer": "D",
+      "raw_response": "D",
+      "extracted_answer": "D",
+      "is_correct": true,
+      "latency_ms": 731.7
+    },
+    {
+      "model_name": "gpt-4o",
+      "question_id": "cmmlu_agronomy_4",
+      "subject": "agronomy",
+      "correct_answer": "D",
+      "raw_response": "D",
+      "extracted_answer": "D",
+      "is_correct": true,
+      "latency_ms": 660.2
+    },
+    {
+      "model_name": "gpt-4o",
+      "question_id": "cmmlu_agronomy_5",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "A",
+      "extracted_answer": "A",
+      "is_correct": false,
+      "latency_ms": 812.2
+    },
+    {
+      "model_name": "gpt-4o",
+      "question_id": "cmmlu_agronomy_6",
+      "subject": "agronomy",
+      "correct_answer": "A",
+      "raw_response": "A",
+      "extracted_answer": "A",
+      "is_correct": true,
+      "latency_ms": 782.8
+    },
+    {
+      "model_name": "gpt-4o",
+      "question_id": "cmmlu_agronomy_7",
+      "subject": "agronomy",
+      "correct_answer": "C",
+      "raw_response": "B",
+      "extracted_answer": "B",
+      "is_correct": false,
+      "latency_ms": 657.5
+    },
+    {
+      "model_name": "gpt-4o",
+      "question_id": "cmmlu_agronomy_8",
+      "subject": "agronomy",
+      "correct_answer": "A",
+      "raw_response": "A",
+      "extracted_answer": "A",
+      "is_correct": true,
+      "latency_ms": 761.7
+    },
+    {
+      "model_name": "gpt-4o",
+      "question_id": "cmmlu_agronomy_9",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "B",
+      "extracted_answer": "B",
+      "is_correct": true,
+      "latency_ms": 717.9
+    },
+    {
+      "model_name": "gpt-4o",
+      "question_id": "cmmlu_agronomy_10",
+      "subject": "agronomy",
+      "correct_answer": "D",
+      "raw_response": "D",
+      "extracted_answer": "D",
+      "is_correct": true,
+      "latency_ms": 800.4
+    },
+    {
+      "model_name": "gpt-4o",
+      "question_id": "cmmlu_agronomy_11",
+      "subject": "agronomy",
+      "correct_answer": "A",
+      "raw_response": "A",
+      "extracted_answer": "A",
+      "is_correct": true,
+      "latency_ms": 902.8
+    },
+    {
+      "model_name": "gpt-4o",
+      "question_id": "cmmlu_agronomy_12",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "B",
+      "extracted_answer": "B",
+      "is_correct": true,
+      "latency_ms": 993.7
+    },
+    {
+      "model_name": "gpt-4o",
+      "question_id": "cmmlu_agronomy_13",
+      "subject": "agronomy",
+      "correct_answer": "D",
+      "raw_response": "C",
+      "extracted_answer": "C",
+      "is_correct": false,
+      "latency_ms": 819.6
+    },
+    {
+      "model_name": "gpt-4o",
+      "question_id": "cmmlu_agronomy_14",
+      "subject": "agronomy",
+      "correct_answer": "D",
+      "raw_response": "D",
+      "extracted_answer": "D",
+      "is_correct": true,
+      "latency_ms": 703.6
+    },
+    {
+      "model_name": "gpt-4o",
+      "question_id": "cmmlu_agronomy_15",
+      "subject": "agronomy",
+      "correct_answer": "A",
+      "raw_response": "A",
+      "extracted_answer": "A",
+      "is_correct": true,
+      "latency_ms": 1021.5
+    },
+    {
+      "model_name": "gpt-4o",
+      "question_id": "cmmlu_agronomy_16",
+      "subject": "agronomy",
+      "correct_answer": "C",
+      "raw_response": "C",
+      "extracted_answer": "C",
+      "is_correct": true,
+      "latency_ms": 871.2
+    },
+    {
+      "model_name": "gpt-4o",
+      "question_id": "cmmlu_agronomy_17",
+      "subject": "agronomy",
+      "correct_answer": "A",
+      "raw_response": "A",
+      "extracted_answer": "A",
+      "is_correct": true,
+      "latency_ms": 1205.8
+    },
+    {
+      "model_name": "gpt-4o",
+      "question_id": "cmmlu_agronomy_18",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "B",
+      "extracted_answer": "B",
+      "is_correct": true,
+      "latency_ms": 615.5
+    },
+    {
+      "model_name": "gpt-4o",
+      "question_id": "cmmlu_agronomy_19",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "B",
+      "extracted_answer": "B",
+      "is_correct": true,
+      "latency_ms": 970.4
+    },
+    {
+      "model_name": "gpt-5.5",
+      "question_id": "cmmlu_agronomy_0",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "ERROR: Error code: 503 - {'error': {'message': 'No available channel for model gpt-5.5 under group 20002 (distributor) (request id: 202606290847105536863948268d9d6HTiHUMPp)', 'type': 'new_api_error', 'param': '', 'code': 'model_not_found'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "gpt-5.5",
+      "question_id": "cmmlu_agronomy_1",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "ERROR: Error code: 503 - {'error': {'message': 'No available channel for model gpt-5.5 under group 20002 (distributor) (request id: 202606290847128726741778268d9d660dXayqY)', 'type': 'new_api_error', 'param': '', 'code': 'model_not_found'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "gpt-5.5",
+      "question_id": "cmmlu_agronomy_2",
+      "subject": "agronomy",
+      "correct_answer": "C",
+      "raw_response": "ERROR: Error code: 503 - {'error': {'message': 'No available channel for model gpt-5.5 under group 20002 (distributor) (request id: 202606290847151339888378268d9d63kfDZjmA)', 'type': 'new_api_error', 'param': '', 'code': 'model_not_found'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "gpt-5.5",
+      "question_id": "cmmlu_agronomy_3",
+      "subject": "agronomy",
+      "correct_answer": "D",
+      "raw_response": "ERROR: Error code: 503 - {'error': {'message': 'No available channel for model gpt-5.5 under group 20002 (distributor) (request id: 202606290847174223703838268d9d6azfkvaRs)', 'type': 'new_api_error', 'param': '', 'code': 'model_not_found'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "gpt-5.5",
+      "question_id": "cmmlu_agronomy_4",
+      "subject": "agronomy",
+      "correct_answer": "D",
+      "raw_response": "ERROR: Error code: 503 - {'error': {'message': 'No available channel for model gpt-5.5 under group 20002 (distributor) (request id: 202606290847193818728788268d9d6xCDFP8Fy)', 'type': 'new_api_error', 'param': '', 'code': 'model_not_found'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "gpt-5.5",
+      "question_id": "cmmlu_agronomy_5",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "ERROR: Error code: 503 - {'error': {'message': 'No available channel for model gpt-5.5 under group 20002 (distributor) (request id: 202606290847214927168828268d9d6OLktqkTK)', 'type': 'new_api_error', 'param': '', 'code': 'model_not_found'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "gpt-5.5",
+      "question_id": "cmmlu_agronomy_6",
+      "subject": "agronomy",
+      "correct_answer": "A",
+      "raw_response": "ERROR: Error code: 503 - {'error': {'message': 'No available channel for model gpt-5.5 under group 20002 (distributor) (request id: 202606290847233917321598268d9d6JyPM7qDQ)', 'type': 'new_api_error', 'param': '', 'code': 'model_not_found'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "gpt-5.5",
+      "question_id": "cmmlu_agronomy_7",
+      "subject": "agronomy",
+      "correct_answer": "C",
+      "raw_response": "ERROR: Error code: 503 - {'error': {'message': 'No available channel for model gpt-5.5 under group 20002 (distributor) (request id: 202606290847253774954218268d9d6wU9CwLE9)', 'type': 'new_api_error', 'param': '', 'code': 'model_not_found'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "gpt-5.5",
+      "question_id": "cmmlu_agronomy_8",
+      "subject": "agronomy",
+      "correct_answer": "A",
+      "raw_response": "ERROR: Error code: 503 - {'error': {'message': 'No available channel for model gpt-5.5 under group 20002 (distributor) (request id: 202606290847274446982958268d9d6sTGmlcwo)', 'type': 'new_api_error', 'param': '', 'code': 'model_not_found'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "gpt-5.5",
+      "question_id": "cmmlu_agronomy_9",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "ERROR: Error code: 503 - {'error': {'message': 'No available channel for model gpt-5.5 under group 20002 (distributor) (request id: 202606290847293603222918268d9d6Pu5wYyTP)', 'type': 'new_api_error', 'param': '', 'code': 'model_not_found'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "gpt-5.5",
+      "question_id": "cmmlu_agronomy_10",
+      "subject": "agronomy",
+      "correct_answer": "D",
+      "raw_response": "ERROR: Error code: 503 - {'error': {'message': 'No available channel for model gpt-5.5 under group 20002 (distributor) (request id: 202606290847317795421548268d9d67mEck6qT)', 'type': 'new_api_error', 'param': '', 'code': 'model_not_found'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "gpt-5.5",
+      "question_id": "cmmlu_agronomy_11",
+      "subject": "agronomy",
+      "correct_answer": "A",
+      "raw_response": "ERROR: Error code: 503 - {'error': {'message': 'No available channel for model gpt-5.5 under group 20002 (distributor) (request id: 202606290847339132900158268d9d6jHvZ3FS5)', 'type': 'new_api_error', 'param': '', 'code': 'model_not_found'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "gpt-5.5",
+      "question_id": "cmmlu_agronomy_12",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "ERROR: Error code: 503 - {'error': {'message': 'No available channel for model gpt-5.5 under group 20002 (distributor) (request id: 20260629084736576702128268d9d68efFCahX)', 'type': 'new_api_error', 'param': '', 'code': 'model_not_found'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "gpt-5.5",
+      "question_id": "cmmlu_agronomy_13",
+      "subject": "agronomy",
+      "correct_answer": "D",
+      "raw_response": "ERROR: Error code: 503 - {'error': {'message': 'No available channel for model gpt-5.5 under group 20002 (distributor) (request id: 202606290847382303327508268d9d6ReC0x1mX)', 'type': 'new_api_error', 'param': '', 'code': 'model_not_found'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "gpt-5.5",
+      "question_id": "cmmlu_agronomy_14",
+      "subject": "agronomy",
+      "correct_answer": "D",
+      "raw_response": "ERROR: Error code: 503 - {'error': {'message': 'No available channel for model gpt-5.5 under group 20002 (distributor) (request id: 202606290847402371491208268d9d6D9xGYlK9)', 'type': 'new_api_error', 'param': '', 'code': 'model_not_found'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "gpt-5.5",
+      "question_id": "cmmlu_agronomy_15",
+      "subject": "agronomy",
+      "correct_answer": "A",
+      "raw_response": "ERROR: Error code: 503 - {'error': {'message': 'No available channel for model gpt-5.5 under group 20002 (distributor) (request id: 202606290847423166252158268d9d63h1N03pY)', 'type': 'new_api_error', 'param': '', 'code': 'model_not_found'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "gpt-5.5",
+      "question_id": "cmmlu_agronomy_16",
+      "subject": "agronomy",
+      "correct_answer": "C",
+      "raw_response": "ERROR: Error code: 503 - {'error': {'message': 'No available channel for model gpt-5.5 under group 20002 (distributor) (request id: 202606290847444619596588268d9d6lKz9Rp04)', 'type': 'new_api_error', 'param': '', 'code': 'model_not_found'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "gpt-5.5",
+      "question_id": "cmmlu_agronomy_17",
+      "subject": "agronomy",
+      "correct_answer": "A",
+      "raw_response": "ERROR: Error code: 503 - {'error': {'message': 'No available channel for model gpt-5.5 under group 20002 (distributor) (request id: 202606290847466340321458268d9d6FZO3iWTz)', 'type': 'new_api_error', 'param': '', 'code': 'model_not_found'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "gpt-5.5",
+      "question_id": "cmmlu_agronomy_18",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "ERROR: Error code: 503 - {'error': {'message': 'No available channel for model gpt-5.5 under group 20002 (distributor) (request id: 202606290847487466853178268d9d650vKvlud)', 'type': 'new_api_error', 'param': '', 'code': 'model_not_found'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "gpt-5.5",
+      "question_id": "cmmlu_agronomy_19",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "ERROR: Error code: 503 - {'error': {'message': 'No available channel for model gpt-5.5 under group 20002 (distributor) (request id: 202606290847507128524878268d9d6QouVxIXF)', 'type': 'new_api_error', 'param': '', 'code': 'model_not_found'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "gpt-5.4",
+      "question_id": "cmmlu_agronomy_0",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "ERROR: Error code: 503 - {'error': {'message': 'No available channel for model gpt-5.4 under group 20002 (distributor) (request id: 202606290847105231540198268d9d63Hf6yyKa)', 'type': 'new_api_error', 'param': '', 'code': 'model_not_found'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "gpt-5.4",
+      "question_id": "cmmlu_agronomy_1",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "ERROR: Error code: 503 - {'error': {'message': 'No available channel for model gpt-5.4 under group 20002 (distributor) (request id: 202606290847127843250568268d9d6LhztuG8g)', 'type': 'new_api_error', 'param': '', 'code': 'model_not_found'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "gpt-5.4",
+      "question_id": "cmmlu_agronomy_2",
+      "subject": "agronomy",
+      "correct_answer": "C",
+      "raw_response": "ERROR: Error code: 503 - {'error': {'message': 'No available channel for model gpt-5.4 under group 20002 (distributor) (request id: 202606290847151669048778268d9d6Ax1RSBPr)', 'type': 'new_api_error', 'param': '', 'code': 'model_not_found'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "gpt-5.4",
+      "question_id": "cmmlu_agronomy_3",
+      "subject": "agronomy",
+      "correct_answer": "D",
+      "raw_response": "ERROR: Error code: 503 - {'error': {'message': 'No available channel for model gpt-5.4 under group 20002 (distributor) (request id: 202606290847171851039978268d9d6dz1Lebbb)', 'type': 'new_api_error', 'param': '', 'code': 'model_not_found'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "gpt-5.4",
+      "question_id": "cmmlu_agronomy_4",
+      "subject": "agronomy",
+      "correct_answer": "D",
+      "raw_response": "ERROR: Error code: 503 - {'error': {'message': 'No available channel for model gpt-5.4 under group 20002 (distributor) (request id: 202606290847193885794878268d9d6P49q0MhW)', 'type': 'new_api_error', 'param': '', 'code': 'model_not_found'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "gpt-5.4",
+      "question_id": "cmmlu_agronomy_5",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "ERROR: Error code: 503 - {'error': {'message': 'No available channel for model gpt-5.4 under group 20002 (distributor) (request id: 202606290847216855866298268d9d6s1ALeMXm)', 'type': 'new_api_error', 'param': '', 'code': 'model_not_found'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "gpt-5.4",
+      "question_id": "cmmlu_agronomy_6",
+      "subject": "agronomy",
+      "correct_answer": "A",
+      "raw_response": "ERROR: Error code: 503 - {'error': {'message': 'No available channel for model gpt-5.4 under group 20002 (distributor) (request id: 202606290847239186480258268d9d6QPA6Qo0l)', 'type': 'new_api_error', 'param': '', 'code': 'model_not_found'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "gpt-5.4",
+      "question_id": "cmmlu_agronomy_7",
+      "subject": "agronomy",
+      "correct_answer": "C",
+      "raw_response": "ERROR: Error code: 503 - {'error': {'message': 'No available channel for model gpt-5.4 under group 20002 (distributor) (request id: 202606290847261557748998268d9d6NGMWqMfz)', 'type': 'new_api_error', 'param': '', 'code': 'model_not_found'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "gpt-5.4",
+      "question_id": "cmmlu_agronomy_8",
+      "subject": "agronomy",
+      "correct_answer": "A",
+      "raw_response": "ERROR: Error code: 503 - {'error': {'message': 'No available channel for model gpt-5.4 under group 20002 (distributor) (request id: 20260629084728799719208268d9d6TPCOuIYj)', 'type': 'new_api_error', 'param': '', 'code': 'model_not_found'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "gpt-5.4",
+      "question_id": "cmmlu_agronomy_9",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "ERROR: Error code: 503 - {'error': {'message': 'No available channel for model gpt-5.4 under group 20002 (distributor) (request id: 20260629084730723708538268d9d62zOEHyns)', 'type': 'new_api_error', 'param': '', 'code': 'model_not_found'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "gpt-5.4",
+      "question_id": "cmmlu_agronomy_10",
+      "subject": "agronomy",
+      "correct_answer": "D",
+      "raw_response": "ERROR: Error code: 503 - {'error': {'message': 'No available channel for model gpt-5.4 under group 20002 (distributor) (request id: 202606290847324062430668268d9d6sw9dHbm3)', 'type': 'new_api_error', 'param': '', 'code': 'model_not_found'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "gpt-5.4",
+      "question_id": "cmmlu_agronomy_11",
+      "subject": "agronomy",
+      "correct_answer": "A",
+      "raw_response": "ERROR: Error code: 503 - {'error': {'message': 'No available channel for model gpt-5.4 under group 20002 (distributor) (request id: 202606290847347072843568268d9d6kgOfS6Tk)', 'type': 'new_api_error', 'param': '', 'code': 'model_not_found'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "gpt-5.4",
+      "question_id": "cmmlu_agronomy_12",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "ERROR: Error code: 503 - {'error': {'message': 'No available channel for model gpt-5.4 under group 20002 (distributor) (request id: 202606290847366655041138268d9d62gvwtdT5)', 'type': 'new_api_error', 'param': '', 'code': 'model_not_found'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "gpt-5.4",
+      "question_id": "cmmlu_agronomy_13",
+      "subject": "agronomy",
+      "correct_answer": "D",
+      "raw_response": "ERROR: Error code: 503 - {'error': {'message': 'No available channel for model gpt-5.4 under group 20002 (distributor) (request id: 202606290847387451427268268d9d621XD599U)', 'type': 'new_api_error', 'param': '', 'code': 'model_not_found'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "gpt-5.4",
+      "question_id": "cmmlu_agronomy_14",
+      "subject": "agronomy",
+      "correct_answer": "D",
+      "raw_response": "ERROR: Error code: 503 - {'error': {'message': 'No available channel for model gpt-5.4 under group 20002 (distributor) (request id: 202606290847408532624418268d9d6PF7I1VQW)', 'type': 'new_api_error', 'param': '', 'code': 'model_not_found'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "gpt-5.4",
+      "question_id": "cmmlu_agronomy_15",
+      "subject": "agronomy",
+      "correct_answer": "A",
+      "raw_response": "ERROR: Error code: 503 - {'error': {'message': 'No available channel for model gpt-5.4 under group 20002 (distributor) (request id: 20260629084743319937928268d9d6ERrtgboy)', 'type': 'new_api_error', 'param': '', 'code': 'model_not_found'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "gpt-5.4",
+      "question_id": "cmmlu_agronomy_16",
+      "subject": "agronomy",
+      "correct_answer": "C",
+      "raw_response": "ERROR: Error code: 503 - {'error': {'message': 'No available channel for model gpt-5.4 under group 20002 (distributor) (request id: 202606290847451977692708268d9d6l2H3ZClG)', 'type': 'new_api_error', 'param': '', 'code': 'model_not_found'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "gpt-5.4",
+      "question_id": "cmmlu_agronomy_17",
+      "subject": "agronomy",
+      "correct_answer": "A",
+      "raw_response": "ERROR: Error code: 503 - {'error': {'message': 'No available channel for model gpt-5.4 under group 20002 (distributor) (request id: 202606290847472294621278268d9d61cU1OjDj)', 'type': 'new_api_error', 'param': '', 'code': 'model_not_found'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "gpt-5.4",
+      "question_id": "cmmlu_agronomy_18",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "ERROR: Error code: 503 - {'error': {'message': 'No available channel for model gpt-5.4 under group 20002 (distributor) (request id: 202606290847493895682688268d9d6XEINoMUU)', 'type': 'new_api_error', 'param': '', 'code': 'model_not_found'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "gpt-5.4",
+      "question_id": "cmmlu_agronomy_19",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "ERROR: Error code: 503 - {'error': {'message': 'No available channel for model gpt-5.4 under group 20002 (distributor) (request id: 202606290847515241849738268d9d66m1U6qJB)', 'type': 'new_api_error', 'param': '', 'code': 'model_not_found'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "gemini-2.5-pro",
+      "question_id": "cmmlu_agronomy_0",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "B",
+      "extracted_answer": "B",
+      "is_correct": true,
+      "latency_ms": 6393.3
+    },
+    {
+      "model_name": "gemini-2.5-pro",
+      "question_id": "cmmlu_agronomy_1",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "B",
+      "extracted_answer": "B",
+      "is_correct": true,
+      "latency_ms": 6516.2
+    },
+    {
+      "model_name": "gemini-2.5-pro",
+      "question_id": "cmmlu_agronomy_2",
+      "subject": "agronomy",
+      "correct_answer": "C",
+      "raw_response": "C",
+      "extracted_answer": "C",
+      "is_correct": true,
+      "latency_ms": 6575.8
+    },
+    {
+      "model_name": "gemini-2.5-pro",
+      "question_id": "cmmlu_agronomy_3",
+      "subject": "agronomy",
+      "correct_answer": "D",
+      "raw_response": "D",
+      "extracted_answer": "D",
+      "is_correct": true,
+      "latency_ms": 6960.4
+    },
+    {
+      "model_name": "gemini-2.5-pro",
+      "question_id": "cmmlu_agronomy_4",
+      "subject": "agronomy",
+      "correct_answer": "D",
+      "raw_response": "D",
+      "extracted_answer": "D",
+      "is_correct": true,
+      "latency_ms": 6512.3
+    },
+    {
+      "model_name": "gemini-2.5-pro",
+      "question_id": "cmmlu_agronomy_5",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "B",
+      "extracted_answer": "B",
+      "is_correct": true,
+      "latency_ms": 6359.5
+    },
+    {
+      "model_name": "gemini-2.5-pro",
+      "question_id": "cmmlu_agronomy_6",
+      "subject": "agronomy",
+      "correct_answer": "A",
+      "raw_response": "A",
+      "extracted_answer": "A",
+      "is_correct": true,
+      "latency_ms": 5320.8
+    },
+    {
+      "model_name": "gemini-2.5-pro",
+      "question_id": "cmmlu_agronomy_7",
+      "subject": "agronomy",
+      "correct_answer": "C",
+      "raw_response": "C",
+      "extracted_answer": "C",
+      "is_correct": true,
+      "latency_ms": 6680.7
+    },
+    {
+      "model_name": "gemini-2.5-pro",
+      "question_id": "cmmlu_agronomy_8",
+      "subject": "agronomy",
+      "correct_answer": "A",
+      "raw_response": "A",
+      "extracted_answer": "A",
+      "is_correct": true,
+      "latency_ms": 6134.8
+    },
+    {
+      "model_name": "gemini-2.5-pro",
+      "question_id": "cmmlu_agronomy_9",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "B",
+      "extracted_answer": "B",
+      "is_correct": true,
+      "latency_ms": 6407.7
+    },
+    {
+      "model_name": "gemini-2.5-pro",
+      "question_id": "cmmlu_agronomy_10",
+      "subject": "agronomy",
+      "correct_answer": "D",
+      "raw_response": "D",
+      "extracted_answer": "D",
+      "is_correct": true,
+      "latency_ms": 5636.6
+    },
+    {
+      "model_name": "gemini-2.5-pro",
+      "question_id": "cmmlu_agronomy_11",
+      "subject": "agronomy",
+      "correct_answer": "A",
+      "raw_response": "B",
+      "extracted_answer": "B",
+      "is_correct": false,
+      "latency_ms": 6552.4
+    },
+    {
+      "model_name": "gemini-2.5-pro",
+      "question_id": "cmmlu_agronomy_12",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "B",
+      "extracted_answer": "B",
+      "is_correct": true,
+      "latency_ms": 6215.1
+    },
+    {
+      "model_name": "gemini-2.5-pro",
+      "question_id": "cmmlu_agronomy_13",
+      "subject": "agronomy",
+      "correct_answer": "D",
+      "raw_response": "A",
+      "extracted_answer": "A",
+      "is_correct": false,
+      "latency_ms": 6787.5
+    },
+    {
+      "model_name": "gemini-2.5-pro",
+      "question_id": "cmmlu_agronomy_14",
+      "subject": "agronomy",
+      "correct_answer": "D",
+      "raw_response": "D",
+      "extracted_answer": "D",
+      "is_correct": true,
+      "latency_ms": 5856.5
+    },
+    {
+      "model_name": "gemini-2.5-pro",
+      "question_id": "cmmlu_agronomy_15",
+      "subject": "agronomy",
+      "correct_answer": "A",
+      "raw_response": "A",
+      "extracted_answer": "A",
+      "is_correct": true,
+      "latency_ms": 6503.2
+    },
+    {
+      "model_name": "gemini-2.5-pro",
+      "question_id": "cmmlu_agronomy_16",
+      "subject": "agronomy",
+      "correct_answer": "C",
+      "raw_response": "C",
+      "extracted_answer": "C",
+      "is_correct": true,
+      "latency_ms": 7037.5
+    },
+    {
+      "model_name": "gemini-2.5-pro",
+      "question_id": "cmmlu_agronomy_17",
+      "subject": "agronomy",
+      "correct_answer": "A",
+      "raw_response": "A",
+      "extracted_answer": "A",
+      "is_correct": true,
+      "latency_ms": 6475.6
+    },
+    {
+      "model_name": "gemini-2.5-pro",
+      "question_id": "cmmlu_agronomy_18",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "B",
+      "extracted_answer": "B",
+      "is_correct": true,
+      "latency_ms": 5497.2
+    },
+    {
+      "model_name": "gemini-2.5-pro",
+      "question_id": "cmmlu_agronomy_19",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "D",
+      "extracted_answer": "D",
+      "is_correct": false,
+      "latency_ms": 6470.4
+    }
+  ],
+  "summary": {
+    "gemini-2.5-pro": {
+      "correct": 17,
+      "total": 20,
+      "accuracy": 0.85,
+      "by_subject": {
+        "agronomy": {
+          "correct": 17,
+          "total": 20
+        }
+      }
+    },
+    "gpt-4o": {
+      "correct": 17,
+      "total": 20,
+      "accuracy": 0.85,
+      "by_subject": {
+        "agronomy": {
+          "correct": 17,
+          "total": 20
+        }
+      }
+    },
+    "gpt-5.5": {
+      "correct": 0,
+      "total": 20,
+      "accuracy": 0.0,
+      "by_subject": {
+        "agronomy": {
+          "correct": 0,
+          "total": 20
+        }
+      }
+    },
+    "gpt-5.4": {
+      "correct": 0,
+      "total": 20,
+      "accuracy": 0.0,
+      "by_subject": {
+        "agronomy": {
+          "correct": 0,
+          "total": 20
+        }
+      }
+    }
+  }
+}

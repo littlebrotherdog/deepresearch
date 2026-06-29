@@ -12,6 +12,22 @@ from config import ModelConfig
 
 logger = logging.getLogger(__name__)
 
+# Newer "thinking"/reasoning model families deprecate the `temperature` parameter;
+# sending it makes such backends (e.g. AWS Bedrock) reject the request with 400.
+# Detect by a loose name hint so we simply omit it for those models while keeping
+# it everywhere else. Add tokens here as new thinking models appear.
+_THINKING_MODEL_HINTS: tuple[str, ...] = (
+    "opus-4", "opus4",        # Claude Opus 4.x (extended-thinking)
+    "o1-", "o3-", "o4-",      # OpenAI o-series reasoning models
+    "gpt-5", "reasoning", "thinking",
+)
+
+
+def supports_temperature(model_name: str | None) -> bool:
+    """Return False for models that reject the temperature field."""
+    m = (model_name or "").lower()
+    return not any(h in m for h in _THINKING_MODEL_HINTS)
+
 
 class LLMClient:
     """Thin wrapper around OpenAI-compatible chat completions."""
@@ -65,9 +81,11 @@ class LLMClient:
         params: dict = {
             "model": self.config.model_name,
             "messages": messages,
-            "temperature": temperature if temperature is not None else self.config.temperature,
             "max_tokens": max_tokens if max_tokens is not None else self.config.max_tokens,
         }
+        # Thinking/reasoning models reject `temperature`; only send it when supported.
+        if supports_temperature(self.config.model_name):
+            params["temperature"] = temperature if temperature is not None else self.config.temperature
         if response_format:
             params["response_format"] = response_format
         if stop:
@@ -109,10 +127,11 @@ class LLMClient:
         params: dict = {
             "model": self.config.model_name,
             "messages": messages,
-            "temperature": temperature if temperature is not None else self.config.temperature,
             "max_tokens": max_tokens if max_tokens is not None else self.config.max_tokens,
             "stream": True,
         }
+        if supports_temperature(self.config.model_name):
+            params["temperature"] = temperature if temperature is not None else self.config.temperature
         for chunk in self.client.chat.completions.create(**params):
             if not chunk.choices:
                 continue

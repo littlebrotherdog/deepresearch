@@ -1,0 +1,663 @@
+{
+  "id": "8ee79b41b961",
+  "dataset_name": "cmmlu",
+  "models": [
+    {
+      "model_name": "glm-5.1",
+      "base_url": "",
+      "api_key": ""
+    },
+    {
+      "model_name": "claude-opus-4-8",
+      "base_url": "",
+      "api_key": ""
+    },
+    {
+      "model_name": "gpt-5",
+      "base_url": "",
+      "api_key": ""
+    }
+  ],
+  "subject_filter": [],
+  "num_questions": 20,
+  "status": "completed",
+  "created_at": 1782720720.631466,
+  "completed_at": 1782720895.27919,
+  "results": [
+    {
+      "model_name": "claude-opus-4-8",
+      "question_id": "cmmlu_agronomy_0",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "ERROR: Error code: 400 - {'error': {'message': 'InvokeModel: operation error Bedrock Runtime: InvokeModel, https response error StatusCode: 400, RequestID: 3aa6dfa9-5495-469e-938e-35581054ea86, ValidationException: `temperature` is deprecated for this model.', 'type': 'aws_invoke_error', 'param': '', 'code': 'aws_invoke_error'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "claude-opus-4-8",
+      "question_id": "cmmlu_agronomy_1",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "ERROR: Error code: 400 - {'error': {'message': 'InvokeModel: operation error Bedrock Runtime: InvokeModel, https response error StatusCode: 400, RequestID: 4ec74a6b-3c00-4e5e-8504-9bd412fde691, ValidationException: `temperature` is deprecated for this model.', 'type': 'aws_invoke_error', 'param': '', 'code': 'aws_invoke_error'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "claude-opus-4-8",
+      "question_id": "cmmlu_agronomy_2",
+      "subject": "agronomy",
+      "correct_answer": "C",
+      "raw_response": "ERROR: Error code: 400 - {'error': {'message': 'InvokeModel: operation error Bedrock Runtime: InvokeModel, https response error StatusCode: 400, RequestID: 017eed6b-daed-4079-9548-91748e7e8f4b, ValidationException: `temperature` is deprecated for this model.', 'type': 'aws_invoke_error', 'param': '', 'code': 'aws_invoke_error'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "claude-opus-4-8",
+      "question_id": "cmmlu_agronomy_3",
+      "subject": "agronomy",
+      "correct_answer": "D",
+      "raw_response": "ERROR: Error code: 400 - {'error': {'message': 'InvokeModel: operation error Bedrock Runtime: InvokeModel, https response error StatusCode: 400, RequestID: 654c098d-e731-4621-b80d-19a56f056393, ValidationException: `temperature` is deprecated for this model.', 'type': 'aws_invoke_error', 'param': '', 'code': 'aws_invoke_error'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "claude-opus-4-8",
+      "question_id": "cmmlu_agronomy_4",
+      "subject": "agronomy",
+      "correct_answer": "D",
+      "raw_response": "ERROR: Error code: 400 - {'error': {'message': 'InvokeModel: operation error Bedrock Runtime: InvokeModel, https response error StatusCode: 400, RequestID: 1361252d-b63d-4675-8602-d49f6590fb80, ValidationException: `temperature` is deprecated for this model.', 'type': 'aws_invoke_error', 'param': '', 'code': 'aws_invoke_error'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "claude-opus-4-8",
+      "question_id": "cmmlu_agronomy_5",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "ERROR: Error code: 400 - {'error': {'message': 'InvokeModel: operation error Bedrock Runtime: InvokeModel, https response error StatusCode: 400, RequestID: 4509dbf6-b6d3-44bc-95b6-e1bcdab84e52, ValidationException: `temperature` is deprecated for this model.', 'type': 'aws_invoke_error', 'param': '', 'code': 'aws_invoke_error'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "claude-opus-4-8",
+      "question_id": "cmmlu_agronomy_6",
+      "subject": "agronomy",
+      "correct_answer": "A",
+      "raw_response": "ERROR: Error code: 400 - {'error': {'message': 'InvokeModel: operation error Bedrock Runtime: InvokeModel, https response error StatusCode: 400, RequestID: 368e5fa3-3655-4e20-9466-892475c04006, ValidationException: `temperature` is deprecated for this model.', 'type': 'aws_invoke_error', 'param': '', 'code': 'aws_invoke_error'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "claude-opus-4-8",
+      "question_id": "cmmlu_agronomy_7",
+      "subject": "agronomy",
+      "correct_answer": "C",
+      "raw_response": "ERROR: Error code: 400 - {'error': {'message': 'InvokeModel: operation error Bedrock Runtime: InvokeModel, https response error StatusCode: 400, RequestID: df4ea203-7f51-46a5-8ce7-f7eccf16650d, ValidationException: `temperature` is deprecated for this model.', 'type': 'aws_invoke_error', 'param': '', 'code': 'aws_invoke_error'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "claude-opus-4-8",
+      "question_id": "cmmlu_agronomy_8",
+      "subject": "agronomy",
+      "correct_answer": "A",
+      "raw_response": "ERROR: Error code: 400 - {'error': {'message': 'InvokeModel: operation error Bedrock Runtime: InvokeModel, https response error StatusCode: 400, RequestID: 0ee8eef2-6b08-4fc2-b575-9f54ca08e8ee, ValidationException: `temperature` is deprecated for this model.', 'type': 'aws_invoke_error', 'param': '', 'code': 'aws_invoke_error'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "claude-opus-4-8",
+      "question_id": "cmmlu_agronomy_9",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "ERROR: Error code: 400 - {'error': {'message': 'InvokeModel: operation error Bedrock Runtime: InvokeModel, https response error StatusCode: 400, RequestID: 6d59ad05-84a5-4d3c-a155-d4c4535ea658, ValidationException: `temperature` is deprecated for this model.', 'type': 'aws_invoke_error', 'param': '', 'code': 'aws_invoke_error'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "claude-opus-4-8",
+      "question_id": "cmmlu_agronomy_10",
+      "subject": "agronomy",
+      "correct_answer": "D",
+      "raw_response": "ERROR: Error code: 400 - {'error': {'message': 'InvokeModel: operation error Bedrock Runtime: InvokeModel, https response error StatusCode: 400, RequestID: a46df136-1f71-41b5-a3b5-12516d27848a, ValidationException: `temperature` is deprecated for this model.', 'type': 'aws_invoke_error', 'param': '', 'code': 'aws_invoke_error'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "claude-opus-4-8",
+      "question_id": "cmmlu_agronomy_11",
+      "subject": "agronomy",
+      "correct_answer": "A",
+      "raw_response": "ERROR: Error code: 400 - {'error': {'message': 'InvokeModel: operation error Bedrock Runtime: InvokeModel, https response error StatusCode: 400, RequestID: bff09b12-4264-44a4-9e5a-6b1335469830, ValidationException: `temperature` is deprecated for this model.', 'type': 'aws_invoke_error', 'param': '', 'code': 'aws_invoke_error'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "claude-opus-4-8",
+      "question_id": "cmmlu_agronomy_12",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "ERROR: Error code: 400 - {'error': {'message': 'InvokeModel: operation error Bedrock Runtime: InvokeModel, https response error StatusCode: 400, RequestID: 97ce05c8-0e24-4650-85f6-8f3b64086799, ValidationException: `temperature` is deprecated for this model.', 'type': 'aws_invoke_error', 'param': '', 'code': 'aws_invoke_error'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "claude-opus-4-8",
+      "question_id": "cmmlu_agronomy_13",
+      "subject": "agronomy",
+      "correct_answer": "D",
+      "raw_response": "ERROR: Error code: 400 - {'error': {'message': 'InvokeModel: operation error Bedrock Runtime: InvokeModel, https response error StatusCode: 400, RequestID: 1aa9a748-0d69-4ead-978c-10269ee60a4a, ValidationException: `temperature` is deprecated for this model.', 'type': 'aws_invoke_error', 'param': '', 'code': 'aws_invoke_error'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "claude-opus-4-8",
+      "question_id": "cmmlu_agronomy_14",
+      "subject": "agronomy",
+      "correct_answer": "D",
+      "raw_response": "ERROR: Error code: 400 - {'error': {'message': 'InvokeModel: operation error Bedrock Runtime: InvokeModel, https response error StatusCode: 400, RequestID: 94361eed-2971-497b-84d2-e4dde14b5da0, ValidationException: `temperature` is deprecated for this model.', 'type': 'aws_invoke_error', 'param': '', 'code': 'aws_invoke_error'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "claude-opus-4-8",
+      "question_id": "cmmlu_agronomy_15",
+      "subject": "agronomy",
+      "correct_answer": "A",
+      "raw_response": "ERROR: Error code: 400 - {'error': {'message': 'InvokeModel: operation error Bedrock Runtime: InvokeModel, https response error StatusCode: 400, RequestID: ef92eb47-820c-4d82-8db5-8091a0f9f54c, ValidationException: `temperature` is deprecated for this model.', 'type': 'aws_invoke_error', 'param': '', 'code': 'aws_invoke_error'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "claude-opus-4-8",
+      "question_id": "cmmlu_agronomy_16",
+      "subject": "agronomy",
+      "correct_answer": "C",
+      "raw_response": "ERROR: Error code: 400 - {'error': {'message': 'InvokeModel: operation error Bedrock Runtime: InvokeModel, https response error StatusCode: 400, RequestID: 80118c66-ee92-4899-8583-2795bb4e1079, ValidationException: `temperature` is deprecated for this model.', 'type': 'aws_invoke_error', 'param': '', 'code': 'aws_invoke_error'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "claude-opus-4-8",
+      "question_id": "cmmlu_agronomy_17",
+      "subject": "agronomy",
+      "correct_answer": "A",
+      "raw_response": "ERROR: Error code: 400 - {'error': {'message': 'InvokeModel: operation error Bedrock Runtime: InvokeModel, https response error StatusCode: 400, RequestID: ded53c54-bcc5-446e-a581-cdff5a635c51, ValidationException: `temperature` is deprecated for this model.', 'type': 'aws_invoke_error', 'param': '', 'code': 'aws_invoke_error'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "claude-opus-4-8",
+      "question_id": "cmmlu_agronomy_18",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "ERROR: Error code: 400 - {'error': {'message': 'InvokeModel: operation error Bedrock Runtime: InvokeModel, https response error StatusCode: 400, RequestID: 73229726-df1c-42c0-8ac8-d3aa77660bd1, ValidationException: `temperature` is deprecated for this model.', 'type': 'aws_invoke_error', 'param': '', 'code': 'aws_invoke_error'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "claude-opus-4-8",
+      "question_id": "cmmlu_agronomy_19",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "ERROR: Error code: 400 - {'error': {'message': 'InvokeModel: operation error Bedrock Runtime: InvokeModel, https response error StatusCode: 400, RequestID: 3c0ed83b-d504-42eb-8a90-e90fbda1db8a, ValidationException: `temperature` is deprecated for this model.', 'type': 'aws_invoke_error', 'param': '', 'code': 'aws_invoke_error'}}",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 0
+    },
+    {
+      "model_name": "gpt-5",
+      "question_id": "cmmlu_agronomy_0",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "B",
+      "extracted_answer": "B",
+      "is_correct": true,
+      "latency_ms": 3119.0
+    },
+    {
+      "model_name": "gpt-5",
+      "question_id": "cmmlu_agronomy_1",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 7018.0
+    },
+    {
+      "model_name": "gpt-5",
+      "question_id": "cmmlu_agronomy_2",
+      "subject": "agronomy",
+      "correct_answer": "C",
+      "raw_response": "C",
+      "extracted_answer": "C",
+      "is_correct": true,
+      "latency_ms": 2491.4
+    },
+    {
+      "model_name": "gpt-5",
+      "question_id": "cmmlu_agronomy_3",
+      "subject": "agronomy",
+      "correct_answer": "D",
+      "raw_response": "D",
+      "extracted_answer": "D",
+      "is_correct": true,
+      "latency_ms": 2155.4
+    },
+    {
+      "model_name": "gpt-5",
+      "question_id": "cmmlu_agronomy_4",
+      "subject": "agronomy",
+      "correct_answer": "D",
+      "raw_response": "D",
+      "extracted_answer": "D",
+      "is_correct": true,
+      "latency_ms": 2769.5
+    },
+    {
+      "model_name": "gpt-5",
+      "question_id": "cmmlu_agronomy_5",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "A",
+      "extracted_answer": "A",
+      "is_correct": false,
+      "latency_ms": 6399.3
+    },
+    {
+      "model_name": "gpt-5",
+      "question_id": "cmmlu_agronomy_6",
+      "subject": "agronomy",
+      "correct_answer": "A",
+      "raw_response": "A",
+      "extracted_answer": "A",
+      "is_correct": true,
+      "latency_ms": 5781.0
+    },
+    {
+      "model_name": "gpt-5",
+      "question_id": "cmmlu_agronomy_7",
+      "subject": "agronomy",
+      "correct_answer": "C",
+      "raw_response": "",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 5625.3
+    },
+    {
+      "model_name": "gpt-5",
+      "question_id": "cmmlu_agronomy_8",
+      "subject": "agronomy",
+      "correct_answer": "A",
+      "raw_response": "A",
+      "extracted_answer": "A",
+      "is_correct": true,
+      "latency_ms": 3550.6
+    },
+    {
+      "model_name": "gpt-5",
+      "question_id": "cmmlu_agronomy_9",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "B",
+      "extracted_answer": "B",
+      "is_correct": true,
+      "latency_ms": 3314.2
+    },
+    {
+      "model_name": "gpt-5",
+      "question_id": "cmmlu_agronomy_10",
+      "subject": "agronomy",
+      "correct_answer": "D",
+      "raw_response": "D",
+      "extracted_answer": "D",
+      "is_correct": true,
+      "latency_ms": 5014.8
+    },
+    {
+      "model_name": "gpt-5",
+      "question_id": "cmmlu_agronomy_11",
+      "subject": "agronomy",
+      "correct_answer": "A",
+      "raw_response": "D",
+      "extracted_answer": "D",
+      "is_correct": false,
+      "latency_ms": 7541.7
+    },
+    {
+      "model_name": "gpt-5",
+      "question_id": "cmmlu_agronomy_12",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "B",
+      "extracted_answer": "B",
+      "is_correct": true,
+      "latency_ms": 4965.3
+    },
+    {
+      "model_name": "gpt-5",
+      "question_id": "cmmlu_agronomy_13",
+      "subject": "agronomy",
+      "correct_answer": "D",
+      "raw_response": "",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 7871.2
+    },
+    {
+      "model_name": "gpt-5",
+      "question_id": "cmmlu_agronomy_14",
+      "subject": "agronomy",
+      "correct_answer": "D",
+      "raw_response": "",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 6810.9
+    },
+    {
+      "model_name": "gpt-5",
+      "question_id": "cmmlu_agronomy_15",
+      "subject": "agronomy",
+      "correct_answer": "A",
+      "raw_response": "A",
+      "extracted_answer": "A",
+      "is_correct": true,
+      "latency_ms": 5690.2
+    },
+    {
+      "model_name": "gpt-5",
+      "question_id": "cmmlu_agronomy_16",
+      "subject": "agronomy",
+      "correct_answer": "C",
+      "raw_response": "",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 6741.1
+    },
+    {
+      "model_name": "gpt-5",
+      "question_id": "cmmlu_agronomy_17",
+      "subject": "agronomy",
+      "correct_answer": "A",
+      "raw_response": "A",
+      "extracted_answer": "A",
+      "is_correct": true,
+      "latency_ms": 5957.6
+    },
+    {
+      "model_name": "gpt-5",
+      "question_id": "cmmlu_agronomy_18",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "B",
+      "extracted_answer": "B",
+      "is_correct": true,
+      "latency_ms": 2546.4
+    },
+    {
+      "model_name": "gpt-5",
+      "question_id": "cmmlu_agronomy_19",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "",
+      "extracted_answer": "",
+      "is_correct": false,
+      "latency_ms": 7076.4
+    },
+    {
+      "model_name": "glm-5.1",
+      "question_id": "cmmlu_agronomy_0",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "B",
+      "extracted_answer": "B",
+      "is_correct": true,
+      "latency_ms": 6794.3
+    },
+    {
+      "model_name": "glm-5.1",
+      "question_id": "cmmlu_agronomy_1",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "B",
+      "extracted_answer": "B",
+      "is_correct": true,
+      "latency_ms": 8195.5
+    },
+    {
+      "model_name": "glm-5.1",
+      "question_id": "cmmlu_agronomy_2",
+      "subject": "agronomy",
+      "correct_answer": "C",
+      "raw_response": "C",
+      "extracted_answer": "C",
+      "is_correct": true,
+      "latency_ms": 6138.2
+    },
+    {
+      "model_name": "glm-5.1",
+      "question_id": "cmmlu_agronomy_3",
+      "subject": "agronomy",
+      "correct_answer": "D",
+      "raw_response": "D",
+      "extracted_answer": "D",
+      "is_correct": true,
+      "latency_ms": 14428.6
+    },
+    {
+      "model_name": "glm-5.1",
+      "question_id": "cmmlu_agronomy_4",
+      "subject": "agronomy",
+      "correct_answer": "D",
+      "raw_response": "D",
+      "extracted_answer": "D",
+      "is_correct": true,
+      "latency_ms": 4882.3
+    },
+    {
+      "model_name": "glm-5.1",
+      "question_id": "cmmlu_agronomy_5",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "B",
+      "extracted_answer": "B",
+      "is_correct": true,
+      "latency_ms": 15397.0
+    },
+    {
+      "model_name": "glm-5.1",
+      "question_id": "cmmlu_agronomy_6",
+      "subject": "agronomy",
+      "correct_answer": "A",
+      "raw_response": "A",
+      "extracted_answer": "A",
+      "is_correct": true,
+      "latency_ms": 4819.5
+    },
+    {
+      "model_name": "glm-5.1",
+      "question_id": "cmmlu_agronomy_7",
+      "subject": "agronomy",
+      "correct_answer": "C",
+      "raw_response": "C",
+      "extracted_answer": "C",
+      "is_correct": true,
+      "latency_ms": 6162.1
+    },
+    {
+      "model_name": "glm-5.1",
+      "question_id": "cmmlu_agronomy_8",
+      "subject": "agronomy",
+      "correct_answer": "A",
+      "raw_response": "A",
+      "extracted_answer": "A",
+      "is_correct": true,
+      "latency_ms": 7558.1
+    },
+    {
+      "model_name": "glm-5.1",
+      "question_id": "cmmlu_agronomy_9",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "B",
+      "extracted_answer": "B",
+      "is_correct": true,
+      "latency_ms": 6765.6
+    },
+    {
+      "model_name": "glm-5.1",
+      "question_id": "cmmlu_agronomy_10",
+      "subject": "agronomy",
+      "correct_answer": "D",
+      "raw_response": "D",
+      "extracted_answer": "D",
+      "is_correct": true,
+      "latency_ms": 7691.5
+    },
+    {
+      "model_name": "glm-5.1",
+      "question_id": "cmmlu_agronomy_11",
+      "subject": "agronomy",
+      "correct_answer": "A",
+      "raw_response": "A",
+      "extracted_answer": "A",
+      "is_correct": true,
+      "latency_ms": 16881.0
+    },
+    {
+      "model_name": "glm-5.1",
+      "question_id": "cmmlu_agronomy_12",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "B",
+      "extracted_answer": "B",
+      "is_correct": true,
+      "latency_ms": 9488.7
+    },
+    {
+      "model_name": "glm-5.1",
+      "question_id": "cmmlu_agronomy_13",
+      "subject": "agronomy",
+      "correct_answer": "D",
+      "raw_response": "D",
+      "extracted_answer": "D",
+      "is_correct": true,
+      "latency_ms": 14775.2
+    },
+    {
+      "model_name": "glm-5.1",
+      "question_id": "cmmlu_agronomy_14",
+      "subject": "agronomy",
+      "correct_answer": "D",
+      "raw_response": "D",
+      "extracted_answer": "D",
+      "is_correct": true,
+      "latency_ms": 8168.4
+    },
+    {
+      "model_name": "glm-5.1",
+      "question_id": "cmmlu_agronomy_15",
+      "subject": "agronomy",
+      "correct_answer": "A",
+      "raw_response": "A",
+      "extracted_answer": "A",
+      "is_correct": true,
+      "latency_ms": 5125.3
+    },
+    {
+      "model_name": "glm-5.1",
+      "question_id": "cmmlu_agronomy_16",
+      "subject": "agronomy",
+      "correct_answer": "C",
+      "raw_response": "C",
+      "extracted_answer": "C",
+      "is_correct": true,
+      "latency_ms": 9878.6
+    },
+    {
+      "model_name": "glm-5.1",
+      "question_id": "cmmlu_agronomy_17",
+      "subject": "agronomy",
+      "correct_answer": "A",
+      "raw_response": "A",
+      "extracted_answer": "A",
+      "is_correct": true,
+      "latency_ms": 8166.0
+    },
+    {
+      "model_name": "glm-5.1",
+      "question_id": "cmmlu_agronomy_18",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "B",
+      "extracted_answer": "B",
+      "is_correct": true,
+      "latency_ms": 5712.9
+    },
+    {
+      "model_name": "glm-5.1",
+      "question_id": "cmmlu_agronomy_19",
+      "subject": "agronomy",
+      "correct_answer": "B",
+      "raw_response": "B",
+      "extracted_answer": "B",
+      "is_correct": true,
+      "latency_ms": 7604.4
+    }
+  ],
+  "summary": {
+    "glm-5.1": {
+      "correct": 20,
+      "total": 20,
+      "accuracy": 1.0,
+      "by_subject": {
+        "agronomy": {
+          "correct": 20,
+          "total": 20
+        }
+      }
+    },
+    "claude-opus-4-8": {
+      "correct": 0,
+      "total": 20,
+      "accuracy": 0.0,
+      "by_subject": {
+        "agronomy": {
+          "correct": 0,
+          "total": 20
+        }
+      }
+    },
+    "gpt-5": {
+      "correct": 12,
+      "total": 20,
+      "accuracy": 0.6,
+      "by_subject": {
+        "agronomy": {
+          "correct": 12,
+          "total": 20
+        }
+      }
+    }
+  }
+}

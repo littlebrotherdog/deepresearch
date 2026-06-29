@@ -1,0 +1,32 @@
+{
+  "id": "f3db5d7f1ef8",
+  "dataset_name": "ceval",
+  "models": [
+    {
+      "model_name": "claude-opus-4-6",
+      "base_url": "",
+      "api_key": ""
+    },
+    {
+      "model_name": "claude-opus-4-7",
+      "base_url": "",
+      "api_key": ""
+    },
+    {
+      "model_name": "claude-opus-4-8",
+      "base_url": "",
+      "api_key": ""
+    }
+  ],
+  "subject_filter": [
+    "basic_medicine",
+    "clinical_medicine",
+    "computer_network"
+  ],
+  "num_questions": 0,
+  "status": "error",
+  "created_at": 1782722735.4457579,
+  "completed_at": null,
+  "results": [],
+  "summary": {}
+}

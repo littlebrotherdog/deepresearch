@@ -1,0 +1,247 @@
+{
+  "id": "6ebcb94ccac3",
+  "dataset_name": "ceval",
+  "models": [
+    {
+      "model_name": "deepseek-v3.1",
+      "base_url": "",
+      "api_key": ""
+    },
+    {
+      "model_name": "qwen3-max",
+      "base_url": "",
+      "api_key": ""
+    }
+  ],
+  "subject_filter": [],
+  "num_questions": 10,
+  "status": "completed",
+  "created_at": 1782720110.644885,
+  "completed_at": 1782720128.5876591,
+  "results": [
+    {
+      "model_name": "qwen3-max",
+      "question_id": "ceval_accountant_0",
+      "subject": "accountant",
+      "correct_answer": "D",
+      "raw_response": "D",
+      "extracted_answer": "D",
+      "is_correct": true,
+      "latency_ms": 1151.0
+    },
+    {
+      "model_name": "qwen3-max",
+      "question_id": "ceval_accountant_1",
+      "subject": "accountant",
+      "correct_answer": "C",
+      "raw_response": "C",
+      "extracted_answer": "C",
+      "is_correct": true,
+      "latency_ms": 914.2
+    },
+    {
+      "model_name": "qwen3-max",
+      "question_id": "ceval_accountant_2",
+      "subject": "accountant",
+      "correct_answer": "D",
+      "raw_response": "D",
+      "extracted_answer": "D",
+      "is_correct": true,
+      "latency_ms": 1330.3
+    },
+    {
+      "model_name": "qwen3-max",
+      "question_id": "ceval_accountant_3",
+      "subject": "accountant",
+      "correct_answer": "A",
+      "raw_response": "A",
+      "extracted_answer": "A",
+      "is_correct": true,
+      "latency_ms": 924.4
+    },
+    {
+      "model_name": "qwen3-max",
+      "question_id": "ceval_accountant_4",
+      "subject": "accountant",
+      "correct_answer": "C",
+      "raw_response": "C",
+      "extracted_answer": "C",
+      "is_correct": true,
+      "latency_ms": 513.3
+    },
+    {
+      "model_name": "qwen3-max",
+      "question_id": "ceval_accountant_5",
+      "subject": "accountant",
+      "correct_answer": "A",
+      "raw_response": "A",
+      "extracted_answer": "A",
+      "is_correct": true,
+      "latency_ms": 917.3
+    },
+    {
+      "model_name": "qwen3-max",
+      "question_id": "ceval_accountant_6",
+      "subject": "accountant",
+      "correct_answer": "C",
+      "raw_response": "C",
+      "extracted_answer": "C",
+      "is_correct": true,
+      "latency_ms": 577.9
+    },
+    {
+      "model_name": "qwen3-max",
+      "question_id": "ceval_accountant_7",
+      "subject": "accountant",
+      "correct_answer": "C",
+      "raw_response": "C",
+      "extracted_answer": "C",
+      "is_correct": true,
+      "latency_ms": 965.7
+    },
+    {
+      "model_name": "qwen3-max",
+      "question_id": "ceval_accountant_8",
+      "subject": "accountant",
+      "correct_answer": "B",
+      "raw_response": "B",
+      "extracted_answer": "B",
+      "is_correct": true,
+      "latency_ms": 707.3
+    },
+    {
+      "model_name": "qwen3-max",
+      "question_id": "ceval_accountant_9",
+      "subject": "accountant",
+      "correct_answer": "C",
+      "raw_response": "C",
+      "extracted_answer": "C",
+      "is_correct": true,
+      "latency_ms": 697.3
+    },
+    {
+      "model_name": "deepseek-v3.1",
+      "question_id": "ceval_accountant_0",
+      "subject": "accountant",
+      "correct_answer": "D",
+      "raw_response": "D",
+      "extracted_answer": "D",
+      "is_correct": true,
+      "latency_ms": 1153.9
+    },
+    {
+      "model_name": "deepseek-v3.1",
+      "question_id": "ceval_accountant_1",
+      "subject": "accountant",
+      "correct_answer": "C",
+      "raw_response": "C",
+      "extracted_answer": "C",
+      "is_correct": true,
+      "latency_ms": 2277.0
+    },
+    {
+      "model_name": "deepseek-v3.1",
+      "question_id": "ceval_accountant_2",
+      "subject": "accountant",
+      "correct_answer": "D",
+      "raw_response": "D",
+      "extracted_answer": "D",
+      "is_correct": true,
+      "latency_ms": 2836.6
+    },
+    {
+      "model_name": "deepseek-v3.1",
+      "question_id": "ceval_accountant_3",
+      "subject": "accountant",
+      "correct_answer": "A",
+      "raw_response": "A",
+      "extracted_answer": "A",
+      "is_correct": true,
+      "latency_ms": 6449.7
+    },
+    {
+      "model_name": "deepseek-v3.1",
+      "question_id": "ceval_accountant_4",
+      "subject": "accountant",
+      "correct_answer": "C",
+      "raw_response": "C",
+      "extracted_answer": "C",
+      "is_correct": true,
+      "latency_ms": 497.4
+    },
+    {
+      "model_name": "deepseek-v3.1",
+      "question_id": "ceval_accountant_5",
+      "subject": "accountant",
+      "correct_answer": "A",
+      "raw_response": "A",
+      "extracted_answer": "A",
+      "is_correct": true,
+      "latency_ms": 832.7
+    },
+    {
+      "model_name": "deepseek-v3.1",
+      "question_id": "ceval_accountant_6",
+      "subject": "accountant",
+      "correct_answer": "C",
+      "raw_response": "C",
+      "extracted_answer": "C",
+      "is_correct": true,
+      "latency_ms": 986.5
+    },
+    {
+      "model_name": "deepseek-v3.1",
+      "question_id": "ceval_accountant_7",
+      "subject": "accountant",
+      "correct_answer": "C",
+      "raw_response": "B",
+      "extracted_answer": "B",
+      "is_correct": false,
+      "latency_ms": 821.2
+    },
+    {
+      "model_name": "deepseek-v3.1",
+      "question_id": "ceval_accountant_8",
+      "subject": "accountant",
+      "correct_answer": "B",
+      "raw_response": "B",
+      "extracted_answer": "B",
+      "is_correct": true,
+      "latency_ms": 745.0
+    },
+    {
+      "model_name": "deepseek-v3.1",
+      "question_id": "ceval_accountant_9",
+      "subject": "accountant",
+      "correct_answer": "C",
+      "raw_response": "C",
+      "extracted_answer": "C",
+      "is_correct": true,
+      "latency_ms": 1336.3
+    }
+  ],
+  "summary": {
+    "deepseek-v3.1": {
+      "correct": 9,
+      "total": 10,
+      "accuracy": 0.9,
+      "by_subject": {
+        "accountant": {
+          "correct": 9,
+          "total": 10
+        }
+      }
+    },
+    "qwen3-max": {
+      "correct": 10,
+      "total": 10,
+      "accuracy": 1.0,
+      "by_subject": {
+        "accountant": {
+          "correct": 10,
+          "total": 10
+        }
+      }
+    }
+  }
+}

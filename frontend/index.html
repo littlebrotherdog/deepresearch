@@ -86,6 +86,10 @@ body{
 .session-info{flex:1;min-width:0}
 .session-title{font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500}
 .session-meta{font-size:11px;color:var(--text-3);margin-top:3px}
+/* 评测列表项上的删除钮：默认隐藏，hover/选中时浮现 */
+.eval-item-del{position:absolute;top:7px;right:7px;width:19px;height:19px;border-radius:5px;display:none;align-items:center;justify-content:center;font-size:13px;line-height:1;background:var(--panel-strong);border:1px solid var(--border);color:var(--text-3);cursor:pointer;padding:0;font-family:inherit;z-index:2}
+.session-item:hover .eval-item-del,.session-item.active .eval-item-del{display:flex}
+.eval-item-del:hover{background:rgba(251,113,133,.18);border-color:rgba(251,113,133,.45);color:var(--err)}
 .sidebar-footer{padding:12px;border-top:1px solid var(--border)}
 .model-pill{
     display:flex;align-items:center;gap:8px;padding:9px 12px;
@@ -1696,12 +1700,14 @@ function evalLoadRuns(){
             const models=(r.models||[]).join('、');
             const statusLabel={completed:'已完成',running:'运行中',cancelled:'已取消',error:'错误',pending:'等待中'}[r.status]||r.status;
             const accText=r.summary?Object.entries(r.summary).map(([n,s])=>`${n}: ${Math.round(s.accuracy*100)}%`).join('、'):'';
-            item.innerHTML=`<span class="session-dot" style="background:${r.status==='completed'?'var(--ok)':r.status==='running'?'var(--warn)':'var(--text-3)'}"></span>
+            const dotColor=r.status==='completed'?'var(--ok)':r.status==='running'?'var(--warn)':'var(--text-3)';
+            item.innerHTML=`<span class="session-dot" style="background:${dotColor}"></span>
                 <div class="session-info">
-                    <div class="session-title">${r.dataset_name} · ${statusLabel}</div>
-                    <div class="session-meta">${time} · ${r.num_questions}题 · ${models}</div>
-                    ${accText?`<div class="session-meta" style="color:var(--accent)">${accText}</div>`:''}
-                </div>`;
+                    <div class="session-title">${escapeHtml(`${r.dataset_name} · ${statusLabel}`)}</div>
+                    <div class="session-meta">${time} · ${r.num_questions}题 · ${escapeHtml(models)}</div>
+                    ${accText?`<div class="session-meta" style="color:var(--accent)">${escapeHtml(accText)}</div>`:''}
+                </div>
+                <button type="button" class="eval-item-del" title="删除该评测记录" aria-label="删除评测记录">×</button>`;
             item.onclick=()=>{
                 if(r.status==='completed'){
                     evalCurrentId=r.id;
@@ -1713,10 +1719,40 @@ function evalLoadRuns(){
                     });
                 }
             };
+            const delBtn=item.querySelector('.eval-item-del');
+            if(delBtn){delBtn.onclick=(ev)=>{ev.stopPropagation();deleteEvalRun(r.id);};}
             list.appendChild(item);
         });
     }).catch(()=>{});
 }
+
+// 删除一条历史评测记录（复用后端 DELETE /api/eval/runs/{id}）
+async function deleteEvalRun(runId){
+    if(!runId)return;
+    if(!confirm('确定删除这条评测记录？操作不可恢复。'))return;
+    try{
+        const resp=await fetch(`/api/eval/runs/${runId}`,{method:'DELETE'});
+        const data=await resp.json().catch(()=>({}));
+        if(!data||data.deleted===false){
+            alert('该记录不存在或已被移除');return;
+        }
+        // 若删的正是当前展示的结果，退回发起页
+        if(evalCurrentId===runId){
+            evalCurrentId=null;
+            document.getElementById('eval-results').style.display='none';
+            document.getElementById('eval-progress').style.display='none';
+            document.getElementById('eval-cases-list').innerHTML='';
+            document.getElementById('eval-case-count')&&(document.getElementById('eval-case-count').textContent='');
+            document.getElementById('case-filter-row').style.display='none';
+            document.getElementById('eval-setup').style.display='block';
+        }
+        await evalLoadRuns();
+    }catch(e){
+        console.error('deleteEvalRun error:',e);
+        alert('删除失败，请稍后再试');
+    }
+}
+
 </script>
 <script src="/static/vendor/html2pdf.bundle.min.js"></script>
 </body>
